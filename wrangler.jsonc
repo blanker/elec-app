@@ -4,7 +4,7 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "elec-app",
+	"name": "elec",
 	"main": "worker/index.js",
 	"compatibility_date": "2025-04-16",
 	"assets": {
