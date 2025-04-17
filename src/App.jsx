@@ -36,7 +36,7 @@ function App() {
       <div className='card'>
         <button
           onClick={() => {
-            fetch('/api/')
+            fetch('/api/json')
               .then((res) => res.json())
               .then((data) => setName(data.name))
           }}
