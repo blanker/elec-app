@@ -99,6 +99,255 @@ router.post('/api/table-hall/', async (request, env, context) => {
   return json({ success: true, name: 'ok' });
 });
 
+router.post('/api/table-data/daily-demand-market/', async (request, env, context) => {
+  try {
+    const { data, extra } = await request.json();
+    console.log('【service_worker.js】->【content】【ajax-tools-iframe-show】Return message:', data);
+    if (!extra.run_date) {
+      return json({ success: true, name: 'NO RUN_DATE' });
+    }
+    const sql = `
+    INSERT INTO daily_demand_market (
+account_id,
+run_date,
+
+capAbility,
+crtTime,
+electricityType,
+entityType,
+isEa,
+
+loads,
+loads_gen,
+loads_use,
+locateArea,
+maxRespLoad,
+
+maxResponceDur,
+maxResponcePow,
+maxValleyLoad,
+minRespLoad,
+minResponceDur,
+
+minResponcePow,
+minValleyLoad,
+resType,
+respTime,
+score,
+
+userState,
+voltLevel,
+voltagekV
+)
+         VALUES (
+         ?,?,
+         ?,?,?,?,?,
+         ?,?,?,?,?,
+         ?,?,?,?,?,
+         ?,?,?,?,?,
+         ?,?,?
+        )
+      ON CONFLICT(account_id, run_date) DO UPDATE SET
+        capAbility=excluded.capAbility,
+crtTime=excluded.crtTime,
+electricityType=excluded.electricityType,
+entityType=excluded.entityType,
+isEa=excluded.isEa,
+loads=excluded.loads,
+loads_gen=excluded.loads_gen,
+loads_use=excluded.loads_use,
+locateArea=excluded.locateArea,
+maxRespLoad=excluded.maxRespLoad,
+maxResponceDur=excluded.maxResponceDur,
+maxResponcePow=excluded.maxResponcePow,
+maxValleyLoad=excluded.maxValleyLoad,
+minRespLoad=excluded.minRespLoad,
+minResponceDur=excluded.minResponceDur,
+minResponcePow=excluded.minResponcePow,
+minValleyLoad=excluded.minValleyLoad,
+resType=excluded.resType,
+respTime=excluded.respTime,
+score=excluded.score,
+userState=excluded.userState,
+voltLevel=excluded.voltLevel,
+voltagekV=excluded.voltagekV
+    `
+    console.log('sql: ', sql);
+    const {
+      id,
+      capAbility,
+      crtTime,
+      electricityType,
+      entityType,
+      isEa,
+      loads,
+      loads_gen,
+      loads_use,
+      locateArea,
+      maxRespLoad,
+      maxResponceDur,
+      maxResponcePow,
+      maxValleyLoad,
+      minRespLoad,
+      minResponceDur,
+      minResponcePow,
+      minValleyLoad,
+      resType,
+      respTime,
+      score,
+      userState,
+      voltLevel,
+      voltagekV } = data;
+
+    console.log('data', {
+      id,
+      capAbility,
+      crtTime,
+      electricityType,
+      entityType,
+      isEa,
+      loads,
+      loads_gen,
+      loads_use,
+      locateArea,
+      maxRespLoad,
+      maxResponceDur,
+      maxResponcePow,
+      maxValleyLoad,
+      minRespLoad,
+      minResponceDur,
+      minResponcePow,
+      minValleyLoad,
+      resType,
+      respTime,
+      score,
+      userState,
+      voltLevel,
+      voltagekV
+    });
+
+    await env.DB.prepare(sql)
+      .bind(
+        id,
+        extra.run_date,
+        capAbility ?? null,
+        crtTime ?? null,
+        electricityType ?? null,
+        entityType ?? null,
+        isEa ?? null,
+        loads ? JSON.stringify(loads) : null,
+        loads_gen ? JSON.stringify(loads_gen) : null,
+        loads_use ? JSON.stringify(loads_use) : null,
+        locateArea ?? null,
+        maxRespLoad ?? null,
+        maxResponceDur ?? null,
+        maxResponcePow ?? null,
+        maxValleyLoad ?? null,
+        minRespLoad ?? null,
+        minResponceDur ?? null,
+        minResponcePow ?? null,
+        minValleyLoad ?? null,
+        resType ?? null,
+        respTime ?? null,
+        score ?? null,
+        userState ?? null,
+        voltLevel ?? null,
+        voltagekV ?? null
+      )
+      .run();
+  } catch (error) {
+    console.error("Error inserting data:", error);
+    return json({ success: false, error: error.message });
+  }
+
+  return json({ success: true, name: 'ok' });
+});
+
+router.post('/api/table-data/bu-response-cap', async (request, env, context) => {
+  try {
+    // {
+    //   "rows": [
+    //     {
+    //       "accountId": "0501001700001962",
+    //       "accountName": "昆明佩升商贸有限公司",
+    //       "agreeStatus": "未确认",
+    //       "appealRecord": "0",
+    //       "demandNo": "20250414-05-002-03",
+    //       "goodRes": "0",
+    //       "listId": "LISTe3a828a417c8475d8c38be869664cd5a",
+    //       "punishRes": "0",
+    //       "realRes": "-30"
+    //     }
+    //   ],
+    //     "total": 1
+    // }
+    const { data } = await request.json();
+    console.log('【service_worker.js】->【content】【ajax-tools-iframe-show】Return message:', data);
+    const sql = `
+      INSERT INTO bu_response_cap (account_id, account_name, agree_status, appeal_record, demand_no, good_res, list_id, punish_res, real_res)
+           VALUES (?,?,?,?,?,?,?,?,?)
+        ON CONFLICT(account_id, demand_no, list_id) DO UPDATE SET
+          account_name=excluded.account_name,
+          agree_status=excluded.agree_status,
+          appeal_record=excluded.appeal_record,
+          good_res=excluded.good_res,
+          punish_res=excluded.punish_res,
+          real_res=excluded.real_res
+      `;
+    console.log('sql: ', sql);
+    for (const item of data.rows) {
+      const { accountId, accountName, agreeStatus, appealRecord, demandNo, goodRes, listId, punishRes, realRes } = item;
+
+      await env.DB.prepare(sql)
+        .bind(
+          accountId,
+          accountName ?? null,
+          agreeStatus ?? null,
+          appealRecord ?? null,
+          demandNo ?? null,
+          goodRes ?? null,
+          listId ?? null,
+          punishRes ?? null,
+          realRes ?? null
+        )
+        .run();
+    }
+  } catch (error) {
+    console.error("Error inserting data:", error);
+    return json({ success: false, error: error.message });
+  }
+  return json({ success: true, name: 'ok' });
+})
+router.post('/api/table-data/account', async (request, env, context) => {
+
+  try {
+    const { data } = await request.json();
+    console.log('【service_worker.js】->【content】【ajax-tools-iframe-show】Return message:', data);
+    /* {
+    "account": "楚雄移动展厅",
+    "name": "f",
+    }*/
+    const sql = `
+    INSERT INTO account (id, name)
+         VALUES (?,?)
+      ON CONFLICT(id) DO UPDATE SET
+        name=excluded.name
+    `
+    console.log('sql: ', sql);
+    for (const item of data) {
+      await env.DB.prepare(sql)
+        .bind(item.account, item.name)
+        .run();
+    }
+
+  } catch (error) {
+    console.error("Error inserting data:", error);
+    return json({ success: false, error: error.message });
+  }
+
+  return json({ success: true, name: 'ok' });
+});
+
 export default router;
 
 // export default {
