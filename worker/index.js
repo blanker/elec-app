@@ -317,7 +317,8 @@ router.post('/api/table-data/bu-response-cap', async (request, env, context) => 
     return json({ success: false, error: error.message });
   }
   return json({ success: true, name: 'ok' });
-})
+});
+
 router.post('/api/table-data/account', async (request, env, context) => {
 
   try {
@@ -337,6 +338,123 @@ router.post('/api/table-data/account', async (request, env, context) => {
     for (const item of data) {
       await env.DB.prepare(sql)
         .bind(item.account, item.name)
+        .run();
+    }
+
+  } catch (error) {
+    console.error("Error inserting data:", error);
+    return json({ success: false, error: error.message });
+  }
+
+  return json({ success: true, name: 'ok' });
+});
+
+router.post('/api/accounts', async (request, env, context) => {
+
+  try {
+    const sql = `
+    SELECT * FROM account ORDER BY id ASC
+    `
+    console.log('sql: ', sql);
+    const result = await env.DB.prepare(sql)
+      .run();
+
+    return json({
+      success: true,
+      data: result.results,
+    });
+  } catch (error) {
+    console.error("Error inserting data:", error);
+    return json({ success: false, error: error.message });
+  }
+
+});
+
+router.post('/api/rundates', async (request, env, context) => {
+
+  try {
+    const sql = `
+    SELECT run_date, count(*) as cnt FROM daily_demand_market GROUP BY run_date ORDER BY run_date ASC
+    `
+    console.log('sql: ', sql);
+    const result = await env.DB.prepare(sql)
+      .run();
+
+    return json({
+      success: true,
+      data: result.results,
+    });
+  } catch (error) {
+    console.error("Error inserting data:", error);
+    return json({ success: false, error: error.message });
+  }
+
+});
+
+router.post('/api/rundate-data', async (request, env, context) => {
+  const { run_date } = await request.json();
+  try {
+    const sql = `
+    SELECT * FROM daily_demand_market 
+     WHERE run_date = ?
+     ORDER BY account_id ASC
+    `
+    console.log('sql: ', sql);
+    const result = await env.DB.prepare(sql)
+      .bind(run_date)
+      .run();
+
+    return json({
+      success: true,
+      data: result.results,
+    });
+  } catch (error) {
+    console.error("Error inserting data:", error);
+    return json({ success: false, error: error.message });
+  }
+
+});
+
+router.post('/api/responses', async (request, env, context) => {
+
+  try {
+    const sql = `
+    SELECT account_id, demand_no, count(*) as cnt 
+      FROM bu_response_cap 
+    GROUP BY account_id, demand_no
+    ORDER BY demand_no DESC, account_id ASC
+    `
+    console.log('sql: ', sql);
+    const result = await env.DB.prepare(sql)
+      .run();
+
+    return json({
+      success: true,
+      data: result.results,
+    });
+  } catch (error) {
+    console.error("Error inserting data:", error);
+    return json({ success: false, error: error.message });
+  }
+
+});
+
+router.post('/api/table-data/publicity-info', async (request, env, context) => {
+
+  try {
+    const { data } = await request.json();
+    console.log('【service_worker.js】->【content】【ajax-tools-iframe-show】Return message:', data);
+    const sql = `
+    INSERT INTO publicity_info (run_date, invited_id, start_date, end_date)
+         VALUES (?,?,?,?)
+      ON CONFLICT(run_date, invited_id) DO UPDATE SET
+        start_date=excluded.start_date,
+        end_date=excluded.end_date
+    `
+    console.log('sql: ', sql);
+    for (const item of data) {
+      await env.DB.prepare(sql)
+        .bind(item.run_date, item.invited_id, item.start_date, item.end_date)
         .run();
     }
 
