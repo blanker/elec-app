@@ -52,8 +52,8 @@ const data = {
     },
     {
       key: 'response',
-      title: "待推出...",
-      url: "#",
+      title: "响应评估结果公示",
+      url: "/response",
       icon: IconChartBar,
     },
     {

@@ -28,15 +28,20 @@ import {
 } from "@/components/ui/toggle-group"
 import { useShallow } from 'zustand/react/shallow'
 import useRundateStore from '@/store/useRundateStore';
-
-const chartData = [
-  { date: "2024-04-01", desktop: 222, mobile: 150 },
-]
+import useResponseStore from '@/store/useResponseStore';
 
 const chartConfig = {
-  cnt: {
-    label: "户数",
+  visitors: {
+    label: "商户数",
   },
+  cnt: {
+    label: "需求响应申报",
+    color: "var(--primary)",
+  },
+  account_cnt: {
+    label: "响应结果评估",
+    color: "var(--primary)",
+  }
 }
 
 export function ChartAreaRundate() {
@@ -58,6 +63,32 @@ export function ChartAreaRundate() {
     }))
   );
 
+  const { statGroupByRundate, loadingStat, errorState, fetchStatGroupByRundate } = useResponseStore(
+    useShallow((state) => ({
+      statGroupByRundate: state.statGroupByRundate,
+      loadingStat: state.loading,
+      errorState: state.error,
+      fetchStatGroupByRundate: state.fetchStatGroupByRundate
+    }))
+  );
+
+  React.useEffect(() => { fetchStatGroupByRundate(); }, [fetchStatGroupByRundate])
+
+  const chartData = React.useMemo(() => {
+    console.log('chart-area-rundate', rundates, statGroupByRundate);
+    const map = {};
+    statGroupByRundate.forEach((item) => {
+      map[item.run_date] = { ...item };
+    });
+    rundates.forEach((item) => {
+      map[item.run_date] = {
+        ...map[item.run_date],
+        ...item,
+      }
+    });
+    console.log('chart-area-rundate', map, Object.values(map));
+    return Object.values(map);
+  }, [rundates, statGroupByRundate]);
 
   return (
     (<Card className="@container/card">
@@ -65,7 +96,7 @@ export function ChartAreaRundate() {
         <CardTitle>运行日</CardTitle>
         <CardDescription>
           <span className="hidden @[540px]/card:block">
-            运行日户数统计
+            运行日统计
           </span>
           <span className="@[540px]/card:hidden">Last 3 months</span>
         </CardDescription>
@@ -73,11 +104,15 @@ export function ChartAreaRundate() {
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
-          <AreaChart data={rundates}>
+          <AreaChart data={chartData}>
             <defs>
-              <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--color-desktop)" stopOpacity={1.0} />
-                <stop offset="95%" stopColor="var(--color-desktop)" stopOpacity={0.1} />
+              <linearGradient id="fillCnt" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="var(--color-cnt)" stopOpacity={1.0} />
+                <stop offset="95%" stopColor="var(--color-cnt)" stopOpacity={0.1} />
+              </linearGradient>
+              <linearGradient id="fillAccountCnt" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="var(--color-account-cnt)" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="var(--color-account-cnt)" stopOpacity={0.1} />
               </linearGradient>
             </defs>
             <CartesianGrid vertical={false} />
@@ -113,8 +148,14 @@ export function ChartAreaRundate() {
             <Area
               dataKey="cnt"
               type="natural"
-              fill="url(#fillDesktop)"
-              stroke="var(--color-desktop)"
+              fill="url(#fillCnt)"
+              stroke="var(--color-cnt)"
+              stackId="a" />
+            <Area
+              dataKey="account_cnt"
+              type="natural"
+              fill="url(#fillAccountCnt)"
+              stroke="var(--color-account-cnt)"
               stackId="a" />
           </AreaChart>
         </ChartContainer>

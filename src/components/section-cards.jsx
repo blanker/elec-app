@@ -1,4 +1,4 @@
-import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react"
+import { IconTrendingDown, IconTrendingUp, IconUsers, IconCalendarEvent, IconFileDescription, IconChartBar } from "@tabler/icons-react"
 import CountUp from 'react-countup'
 import { useEffect, useMemo, useState } from 'react'
 
@@ -19,7 +19,7 @@ import useRundateStore from '@/store/useRundateStore';
 import useResponseStore from '@/store/useResponseStore';
 
 // 可复用的统计卡片组件
-function StatCard({ data }) {
+function StatCard({ data, ActionIcon }) {
   const { title, value, prefix, suffix, decimals, trend, trendValue, description, subDescription } = data;
   const TrendIcon = trend === 'up' ? IconTrendingUp : IconTrendingDown;
 
@@ -53,14 +53,14 @@ function StatCard({ data }) {
         </CardTitle>
         <CardAction>
           <Badge variant="outline">
-            <TrendIcon />
-            {trendValue}
+            {trendValue && <><TrendIcon /> {trendValue}</>}
+            {ActionIcon ? ActionIcon : null}
           </Badge>
         </CardAction>
       </CardHeader>
       <CardFooter className="flex-col items-start gap-1.5 text-sm">
         <div className="line-clamp-1 flex gap-2 font-medium">
-          {description} <TrendIcon className="size-4" />
+          {description} <IconTrendingUp className="size-4" />
         </div>
         <div className="text-muted-foreground">
           {subDescription}
@@ -82,47 +82,15 @@ export function SkeletonCard() {
   )
 }
 
-function LoadingCard({ }) {
-
-  return (
-    <Card className="@container/card">
-      <CardHeader>
-        <CardDescription><Skeleton className='w-full h-full' /></CardDescription>
-        <CardTitle><Skeleton className='w-full h-full' /></CardTitle>
-      </CardHeader>
-      <CardFooter>
-        <Skeleton className='w-full h-full' />
-      </CardFooter>
-    </Card>
-  );
-}
-
 export function SectionCards() {
-  // 这些数据可以从API获取
-  const [cardsData, setCardsData] = useState([
-
-    {
-      title: "Growth Rate",
-      value: 4.5,
-      suffix: "%",
-      decimals: 1,
-      trend: "up",
-      trendValue: "+4.5%",
-      description: "Steady performance increase",
-      subDescription: "Meets growth projections"
-    }
-  ]);
-
 
 
   return (
     <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
       <AccountCard />
       <RundateCard />
+      <PublicityCard />
       <ResponsesCard />
-      {cardsData.map((card, index) => (
-        <StatCard key={index} data={card} />
-      ))}
     </div>
   );
 }
@@ -147,13 +115,14 @@ function AccountCard() {
   return (
     <StatCard
       data={{
-        title: "户数",
+        title: "商户数",
         value: accounts.length,
         // trend: "up",
         // trendValue: "+12.5%",
         // description: "Strong user retention",
         // subDescription: "Engagement exceed targets"
       }}
+      ActionIcon={<IconUsers className="size-4" />}
     />
   );
 }
@@ -185,11 +154,74 @@ function RundateCard() {
   return (
     <StatCard
       data={{
-        title: "工作日",
+        title: "运行日[需求响应申报]",
         value: rundates.length,
-        description: `从:${minDate}`,
-        subDescription: `到:${maxDate}`,
+        description: `从: ${minDate}`,
+        subDescription: `到: ${maxDate}`,
       }}
+      ActionIcon={<IconCalendarEvent className="size-4" />}
+    />
+  );
+}
+
+function PublicityCard() {
+  const {
+    publicityInfos,
+    loading,
+    error,
+    fetchPublicityInfos,
+  } = useResponseStore(
+    useShallow((state) => ({
+      publicityInfos: state.publicityInfos,
+      loading: state.loading,
+      error: state.error,
+      fetchPublicityInfos: state.fetchPublicityInfos,
+    }))
+  );
+
+  // useEffect(() => { fetchPublicityInfos(); }, [fetchPublicityInfos]);
+
+  const { total, minDate, maxDate, rundates, invitedIds } =
+    useMemo(() => {
+      let total = 0;
+      let minDate = '';
+      let maxDate = '';
+      const rundates = {};
+      const invitedIds = {};
+      publicityInfos.forEach(({ run_date, invited_id }) => {
+        total += 1;
+        if (minDate === '') {
+          minDate = run_date;
+          maxDate = run_date;
+        } else {
+          minDate = minDate < run_date ? minDate : run_date;
+          maxDate = maxDate > run_date ? maxDate : run_date;
+        }
+        rundates[run_date] = (rundates[run_date] || 0) + 1;
+        invitedIds[invited_id] = (invitedIds[invited_id] || 0) + 1;
+      });
+      return {
+        total,
+        minDate,
+        maxDate,
+        rundates,
+        invitedIds,
+      }
+    }, [publicityInfos]);
+
+  if (loading) {
+    return <SkeletonCard />;
+  }
+
+  return (
+    <StatCard
+      data={{
+        title: "运行日[公示信息]",
+        value: Object.keys(rundates).length,
+        description: `${minDate} > ${maxDate}`,
+        subDescription: `邀约ID数量: ${Object.keys(invitedIds).length}`,
+      }}
+      ActionIcon={<IconFileDescription className="size-4" />}
     />
   );
 }
@@ -204,7 +236,9 @@ function ResponsesCard() {
     }))
   );
 
-  useEffect(() => { fetchResponses(); }, [fetchResponses]);
+  useEffect(() => {
+    fetchResponses();
+  }, [fetchResponses]);
   const { accounts, demands } = useMemo(() => {
     const accounts = {};
     const demands = {};
@@ -222,11 +256,12 @@ function ResponsesCard() {
   return (
     <StatCard
       data={{
-        title: "响应结果",
+        title: "响应评估结果",
         value: responses.length,
-        description: `户数:${Object.keys(accounts).length} 总数:${responses.reduce((acc, cur) => acc + cur.cnt, 0)}`,
-        subDescription: `需求数:${Object.keys(demands).length}`,
+        description: `户数: ${Object.keys(accounts).length} 总数: ${responses.reduce((acc, cur) => acc + cur.cnt, 0)}`,
+        subDescription: `邀约ID数: ${Object.keys(demands).length}`,
       }}
+      ActionIcon={<IconChartBar className="size-4" />}
     />
   );
 }
