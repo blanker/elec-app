@@ -10,6 +10,7 @@ import {
 import { saveDevices } from './device.js';
 import { saveDeclaration, statDeclarationRundates, getDeclarationsByRundate } from './declaration.js';
 import { saveAccounts, getAccounts } from './account.js';
+import { saveSettlements } from './settlement.js';
 
 const { preflight, corsify } = cors({
   origin: '*',
@@ -58,6 +59,8 @@ router.post('/api/table-data/bu-response-cap', saveResponses);
 router.post('/api/responses', statResponses);
 router.post('/api/stat-response-group-by-rundate', statResponseGroupByRundate);
 router.post('/api/get-responses-by-rundate', getResponsesByRundate);
+
+router.post('/api/table-data/settlement', saveSettlements);
 
 export default router;
 
