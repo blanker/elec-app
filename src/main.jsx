@@ -5,6 +5,7 @@ import routes from './routes';
 import './index.css'
 import { ThemeProvider } from "@/components/theme-provider"
 
+// defaultAlgorithm
 createRoot(document.getElementById('root')).render(
   <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
     <RouterProvider router={routes} />

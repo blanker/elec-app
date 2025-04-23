@@ -1,4 +1,4 @@
-import { AutoRouter, cors, json } from 'itty-router' // ~1kB
+import { AutoRouter, cors, json, error } from 'itty-router' // ~1kB
 import {
   saveResponses,
   savePublicityInfoList,
@@ -10,7 +10,8 @@ import {
 import { saveDevices } from './device.js';
 import { saveDeclaration, statDeclarationRundates, getDeclarationsByRundate } from './declaration.js';
 import { saveAccounts, getAccounts } from './account.js';
-import { saveSettlements } from './settlement.js';
+import { saveSettlements, countByMonth, fetchByMonth } from './settlement.js';
+import { newUser, login, authMiddleware } from './user.js';
 
 const { preflight, corsify } = cors({
   origin: '*',
@@ -24,7 +25,7 @@ const { preflight, corsify } = cors({
   // allowMethods: 'GET, POST',
   // allowMethods: ['GET', 'POST'],
   // allowHeaders: 'x-foo, x-bar',
-  allowHeaders: ['content-type', 'x-bar'],
+  allowHeaders: ['content-type', 'x-bar', 'authorization'],
   // exposeHeaders: 'x-foo, x-bar',
   // exposeHeaders: ['x-foo', 'x-bar'],
   maxAge: 84600,
@@ -34,7 +35,26 @@ const router = AutoRouter({
   finally: [corsify],   // and corsify downstream
 })
 
+// MIDDLEWARE: withAuthenticatedUser - embeds user in Request or returns a 401
+const withAuthenticatedUser = async (request, env) => {
+  // 不拦截 /api/private/login 
+  if (request.url.includes('/api/private/login')) {
+    return;
+  }
+
+  // return;
+
+  const user = await authMiddleware(request, env);
+
+  // by returning early here, we cut off all future handlers
+  if (!user.success) return error(401, 'Invalid user.')
+
+  // otherwise, we embed the user for future use
+  request.user = user.userId;
+}
+
 router
+  .all('/api/private/*', withAuthenticatedUser)
   .get('/api/hello/:name', ({ name }) => `Hello, ${name}!`)
   .get('/api/json', () => json({ name: 'json' }))
   .get('/api', () => json({ name: 'gogo' }))
@@ -47,20 +67,25 @@ router.post('/api/foo', (request, env, context) => new Response(JSON.stringify({
 router.post('/api/table-device/', saveDevices);
 
 router.post('/api/table-data/account', saveAccounts);
-router.post('/api/accounts', getAccounts);
+router.post('/api/private/accounts', getAccounts);
 
 router.post('/api/table-data/daily-demand-market/', saveDeclaration);
-router.post('/api/rundates', statDeclarationRundates);
-router.post('/api/rundate-data', getDeclarationsByRundate);
+router.post('/api/private/rundates', statDeclarationRundates);
+router.post('/api/private/rundate-data', getDeclarationsByRundate);
 
 router.post('/api/table-data/publicity-info', savePublicityInfoList);
-router.post('/api/publicity-infos', getPublicityInfoList);
+router.post('/api/private/publicity-infos', getPublicityInfoList);
 router.post('/api/table-data/bu-response-cap', saveResponses);
-router.post('/api/responses', statResponses);
-router.post('/api/stat-response-group-by-rundate', statResponseGroupByRundate);
-router.post('/api/get-responses-by-rundate', getResponsesByRundate);
+router.post('/api/private/responses', statResponses);
+router.post('/api/private/stat-response-group-by-rundate', statResponseGroupByRundate);
+router.post('/api/private/get-responses-by-rundate', getResponsesByRundate);
 
 router.post('/api/table-data/settlement', saveSettlements);
+router.post('/api/private/settlement-count-by-month', countByMonth);
+router.post('/api/private/settlements-by-month', fetchByMonth);
+
+router.post('/api/private/table-data/new-user', newUser);
+router.post('/api/private/login', login);
 
 export default router;
 

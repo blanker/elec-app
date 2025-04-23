@@ -1,4 +1,11 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useState, useMemo } from "react"
+import { ConfigProvider, theme as antd_theme } from 'antd';
+import locale from 'antd/locale/zh_CN';
+import dayjs from 'dayjs';
+
+import 'dayjs/locale/zh-cn';
+
+dayjs.locale('zh-cn');
 
 const initialState = {
     theme: "system",
@@ -16,6 +23,20 @@ export function ThemeProvider({
     const [theme, setTheme] = useState(
         () => (localStorage.getItem(storageKey)) || defaultTheme
     )
+
+    const antdTheme = useMemo(() => {
+        let result = antd_theme.darkAlgorithm;
+        if (theme === "light") {
+            result = antd_theme.defaultAlgorithm;
+        }
+        if (theme === "system") {
+            result = window.matchMedia("(prefers-color-scheme: dark)")
+                .matches
+                ? antd_theme.darkAlgorithm
+                : antd_theme.defaultAlgorithm
+        }
+        return result;
+    }, [theme]);
 
     useEffect(() => {
         const root = window.document.documentElement
@@ -45,7 +66,14 @@ export function ThemeProvider({
 
     return (
         <ThemeProviderContext.Provider {...props} value={value}>
-            {children}
+            <ConfigProvider
+                locale={locale}
+                theme={{
+                    algorithm: antdTheme,
+                }}
+            >
+                {children}
+            </ConfigProvider>
         </ThemeProviderContext.Provider>
     )
 }
@@ -57,4 +85,22 @@ export const useTheme = () => {
         throw new Error("useTheme must be used within a ThemeProvider")
 
     return context
+}
+
+export const useThemeS2 = () => {
+    const { theme } = useTheme();
+    const s2Theme = useMemo(() => {
+        let result = 'default';
+        if (theme === "system") {
+            result = window.matchMedia("(prefers-color-scheme: dark)")
+                .matches
+                ? 'dark'
+                : 'default'
+        } else if (theme === 'dark') {
+            result = 'dark';
+        }
+        return { name: result };
+    }, [theme]);
+
+    return { s2Theme };
 }

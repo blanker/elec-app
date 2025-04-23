@@ -8,7 +8,7 @@ const ENV = import.meta.env.MODE || 'development';
 const envConfig = {
   // 开发环境配置
   development: {
-    apiHost: 'https://elec.blanker.cc/api',
+    apiHost: 'https://elec.blanker.cc/api/private',
     apiTimeout: 10000,
     enableLogging: true,
     enableMock: true,
@@ -17,7 +17,7 @@ const envConfig = {
 
   // 测试环境配置
   test: {
-    apiHost: 'https://test-api.example.com/api',
+    apiHost: 'https://test-api.example.com/api/private',
     apiTimeout: 15000,
     enableLogging: true,
     enableMock: false,
@@ -26,7 +26,7 @@ const envConfig = {
 
   // 生产环境配置
   production: {
-    apiHost: 'https://elec.blanker.cc/api',
+    apiHost: 'https://elec.blanker.cc/api/private',
     apiTimeout: 20000,
     enableLogging: false,
     enableMock: false,

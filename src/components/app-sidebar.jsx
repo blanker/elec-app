@@ -31,6 +31,9 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
+import { useShallow } from 'zustand/react/shallow'
+import useUserStore from "@/store/useUserStore"
+
 const data = {
   user: {
     name: "你好",
@@ -162,6 +165,15 @@ const data = {
 export function AppSidebar({
   ...props
 }) {
+  const { user: userInfo, login, error, loading } = useUserStore(
+    useShallow((state) => ({
+      user: state.user,
+      login: state.login,
+      error: state.error,
+      loading: state.loading,
+    }))
+  );
+
   return (
     (<Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>

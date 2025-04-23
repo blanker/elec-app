@@ -6,6 +6,10 @@ import Home from '@/app/dashboard/page'
 import DeclarationPage from '@/app/declaration/page'
 import ResponsePage from '@/app/response/page'
 import AccountPage from '@/app/account/page'
+import SettlementPage from '@/app/settlement/page'
+
+import LoginPage from '@/app/login/page'
+
 import useAccountStore from "@/store/useAccountStore";
 import useResponseStore from "@/store/useResponseStore";
 
@@ -23,9 +27,14 @@ const routes = createHashRouter([
             { path: "declaration", Component: DeclarationPage },
             { path: "response", Component: ResponsePage },
             { path: "accounts", Component: AccountPage },
+            { path: "settlement", Component: SettlementPage },
             // { path: "contact", Component: Contact },
         ],
     },
+    {
+        path: "login",
+        Component: LoginPage,
+    }
 
 ]);
 

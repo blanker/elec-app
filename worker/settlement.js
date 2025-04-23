@@ -82,6 +82,55 @@ export const saveSettlements = async (request, env, context) => {
     return json({ success: true, name: 'ok' });
 };
 
+export async function countByMonth(request, env, context) {
+
+    try {
+        const sql = `
+    SELECT run_month,count(*) cnt
+      FROM settlement 
+     GROUP BY run_month
+     ORDER BY run_month
+    `
+        console.log('sql: ', sql);
+        const result = await env.DB.prepare(sql)
+            .run();
+
+        return json({
+            success: true,
+            data: result.results,
+        });
+    } catch (error) {
+        console.error("Error query data:", error);
+        return json({ success: false, error: error.message });
+    }
+
+}
+
+export async function fetchByMonth(request, env, context) {
+    const { data } = await request.json();
+    try {
+        const sql = `
+    SELECT *
+      FROM settlement 
+     WHERE run_month = ?
+     ORDER BY account_id
+    `
+        console.log('sql: ', sql);
+        const result = await env.DB.prepare(sql)
+            .bind(data.date)
+            .run();
+
+        return json({
+            success: true,
+            data: result.results,
+        });
+    } catch (error) {
+        console.error("Error query data:", error);
+        return json({ success: false, error: error.message });
+    }
+
+}
+
 function formatTimestampToCST(timestamp) {
     // 东八区时间 = UTC 时间 + 8 小时
     const adjustedTimestamp = timestamp + 8 * 3600 * 1000;
