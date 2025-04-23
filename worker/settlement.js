@@ -21,9 +21,10 @@ export const saveSettlements = async (request, env, context) => {
      share_price,
      ass_fee_sum,
      bu_sharing,
-     la_sharing
+     la_sharing,
+     gain_sharing
     )
-         VALUES (?,?,?,?, ?,?,?,?, ?,?,?)
+         VALUES (?,?,?,?, ?,?,?,?, ?,?,?,?)
       ON CONFLICT(account_id, run_month) DO UPDATE SET
         account_name=excluded.account_name,
         fee_sum=excluded.fee_sum,
@@ -33,7 +34,8 @@ export const saveSettlements = async (request, env, context) => {
         share_price=excluded.share_price,
         ass_fee_sum=excluded.ass_fee_sum,
         bu_sharing=excluded.bu_sharing,
-        la_sharing=excluded.la_sharing
+        la_sharing=excluded.la_sharing,
+        gain_sharing=excluded.gain_sharing
     `
         console.log('sql: ', sql);
         for (const item of data.rows) {
@@ -48,8 +50,9 @@ export const saveSettlements = async (request, env, context) => {
             // assFeeSum: "0"
             // buSharing: "-39.36"
             // laSharing:"0"
+            // gainSharing:"0"
 
-            const { accountId, accountName, runMonth, feeSum, monthLoad, resFeeSum, shareFee, sharePrice, assFeeSum, buSharing, laSharing } = item;
+            const { accountId, accountName, runMonth, feeSum, monthLoad, resFeeSum, shareFee, sharePrice, assFeeSum, buSharing, laSharing, gainSharing } = item;
             // 把时间戳runMonth转换为东八区的YYYY-MM格式
             const month = formatTimestampToCST(runMonth);
 
@@ -66,6 +69,7 @@ export const saveSettlements = async (request, env, context) => {
                     assFeeSum ?? null,
                     buSharing ?? null,
                     laSharing ?? null,
+                    gainSharing ?? null
                 )
                 .run();
         }

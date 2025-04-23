@@ -46,6 +46,14 @@ export default function Page() {
         console.log('onMounted:', spreadsheet);
         s2Ref.current = spreadsheet;
         setSheetInstance(spreadsheet);
+        spreadsheet.setTheme({
+            rowCell: {
+                text: {
+                    textAlign: 'left',
+                    textBaseline: 'middle',
+                }
+            }
+        });
     };
     // 添加清理函数
     useEffect(() => {
@@ -127,8 +135,8 @@ export default function Page() {
         // 最高值，最低值
         // 高于平均值的有几个
         // 低于平均值的有几个
-        // 低于平均值20 % 的有几个
-        // 高于平均值20 % 的有几个
+        // 低于平均值20 % 的有几个 80%
+        // 高于平均值20 % 的有几个 120%
         const compute = {};
         filtered.forEach(item => {
             const { account_id, account_name, value } = item;
@@ -143,6 +151,12 @@ export default function Page() {
         Object.entries(compute)
             .forEach(([account_id, { account_name, values }]) => {
                 const avg = values.reduce((acc, it) => acc + it, 0) / values.length;
+                const avg_80 = avg * 0.8;
+                const avg_120 = avg * 1.2;
+                const upAvg_80 = values.reduce((acc, it) => acc + (it > avg_80 ? 1 : 0), 0);
+                const belowAvg_80 = values.reduce((acc, it) => acc + (it < avg_80 ? 1 : 0), 0);
+                const upAvg_120 = values.reduce((acc, it) => acc + (it > avg_120 ? 1 : 0), 0);  // 120%
+                const belowAvg_120 = values.reduce((acc, it) => acc + (it < avg_120 ? 1 : 0), 0);
                 const max = values.reduce((acc, it) => Math.max(acc, it), values[0]);
                 const min = values.reduce((acc, it) => Math.min(acc, it), values[0]);
                 const upAavg = values.reduce((acc, it) => acc + (it > avg ? 1 : 0), 0);
@@ -176,6 +190,18 @@ export default function Page() {
                     account_name,
                     time: '低于平均值',
                     belowAvg: belowAvg,
+                });
+                computed.push({
+                    account_id,
+                    account_name,
+                    time: '低于平均值80%',
+                    belowAvg_80,
+                });
+                computed.push({
+                    account_id,
+                    account_name,
+                    time: '高于平均值120%',
+                    upAvg_120,
                 });
             });
         console.log('computed', computed);
@@ -275,7 +301,7 @@ const defaultDataCfg = {
             sortMethod: 'ASC',
             sortBy: [
                 '平均值', '最小值', '最大值',
-                '高于平均值', '低于平均值',
+                '高于平均值', '低于平均值', "高于平均值120%", "低于平均值80%",
                 '12:00', '12:15', '12:30', '12:45',
                 '13:00', '13:15', "13:30", "13:45",
                 '14:00', '14:15', '14:30', '14:45',
@@ -296,7 +322,7 @@ const defaultDataCfg = {
             "time",
         ],
         "values": [
-            "value", "avg", "min", "max", "upAavg", "belowAvg",
+            "value", "avg", "min", "max", "upAavg", "belowAvg", "upAvg_120", "belowAvg_80"
         ],
         "valueInCols": true
     },
@@ -326,6 +352,14 @@ const defaultDataCfg = {
             "name": "数量"
         },
         {
+            "field": "upAvg_120",
+            "name": "数量"
+        },
+        {
+            "field": "belowAvg_80",
+            "name": "数量"
+        },
+        {
             "field": "account_id",
             "name": "户号"
         },
@@ -341,9 +375,21 @@ const defaultDataCfg = {
     data: [],
 };
 
+const cellTextWordWrapStyle = {
+    // 最大行数，文本超出后将被截断
+    maxLines: 4,
+    // 文本是否换行
+    wordWrap: true,
+    // 可选项见：https://g.antv.antgroup.com/api/basic/text#textoverflow
+    textOverflow: 'ellipsis',
+};
 const s2Options = {
     width: 600,
     height: 480,
+    seriesNumber: {
+        enable: true,
+        text: '序号',
+    },
     tooltip: {
         enable: false
     },
@@ -358,10 +404,24 @@ const s2Options = {
             withHeader: true,
             // 复制格式化后的数据
             withFormat: true
-        }
+        },
+        brushSelection: {
+            dataCell: true,
+            rowCell: true,
+            colCell: true,
+        },
     },
     style: {
         layoutWidthType: 'compact',    // 使用紧凑布局
+        seriesNumberCell: cellTextWordWrapStyle,
+        colCell: cellTextWordWrapStyle,
+        cornerCell: cellTextWordWrapStyle,
+        rowCell: {
+            ...cellTextWordWrapStyle,
+            height: 32,
+        },
+        // 数值不建议换行, 容易产生歧义
+        // dataCell: cellTextWordWrapStyle,
     },
     // 减少不必要的渲染
     frozenRowHeader: true,

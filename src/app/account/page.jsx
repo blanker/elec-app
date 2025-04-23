@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { useShallow } from 'zustand/react/shallow'
 import { format, parseISO } from "date-fns"
 import SkeletonCard from "@/components/skeleton-card"
-import { setLang, asyncGetAllData, DataCell } from '@antv/s2'
+import { setLang, asyncGetAllData } from '@antv/s2'
 import { SheetComponent } from '@antv/s2-react';
 import { Export } from '@antv/s2-react-components';
 import '@antv/s2-react/dist/s2-react.min.css';
@@ -20,42 +20,16 @@ import DateSelector from "@/components/date-selector";
 
 export default function Page() {
     const {
-        publicityInfos,
-        responsesByRundate,
+        accounts,
         loading,
         error,
-        fetchPublicityInfos,
-        getResponsesByRundate,
-    } = useResponseStore(
+    } = useAccountStore(
         useShallow((state) => ({
-            publicityInfos: state.publicityInfos,
-            responsesByRundate: state.responsesByRundate,
+            accounts: state.accounts,
             loading: state.loading,
             error: state.error,
-            fetchPublicityInfos: state.fetchPublicityInfos,
-            getResponsesByRundate: state.getResponsesByRundate,
         }))
     );
-    const availableDates = React.useMemo(() => {
-        const map = publicityInfos.reduce((acc, item) => {
-            acc.set(item.run_date, true);
-            return acc;
-        }, new Map());
-        return [...map.keys()].map(item => parseISO(item));
-    }, [publicityInfos]);
-
-    const [date, setDate] = React.useState()
-
-    // 禁用不在可用日期列表中的日期
-    const disabledDays = React.useCallback((day) => {
-        if (!availableDates) return true;
-        // 检查当前日期是否在可用日期列表中
-        return !availableDates.some(availableDate =>
-            day.getDate() === availableDate.getDate() &&
-            day.getMonth() === availableDate.getMonth() &&
-            day.getFullYear() === availableDate.getFullYear()
-        );
-    }, [availableDates]);
 
     const adaptiveRef = React.useRef();
     const s2Ref = React.useRef(null);
@@ -65,7 +39,14 @@ export default function Page() {
         console.log('onMounted:', spreadsheet);
         s2Ref.current = spreadsheet;
         setSheetInstance(spreadsheet);
-
+        spreadsheet.setTheme({
+            dataCell: {
+                text: {
+                    textAlign: 'left',
+                    textBaseline: 'middle',
+                }
+            }
+        });
     };
     // 添加清理函数
     useEffect(() => {
@@ -80,38 +61,21 @@ export default function Page() {
         };
     }, []);
 
-    const handleSearch = () => {
-        // 处理查询逻辑
-        console.log("查询日期:", date);
-        if (!date) return;
-        getResponsesByRundate(format(date, "yyyy-MM-dd"));
-    }
-
     const dataConfig = React.useMemo(() => {
-        console.log('dataConfig:', responsesByRundate);
+        console.log('dataConfig:', accounts);
         return {
             ...defaultDataCfg,
-            data: responsesByRundate,
+            data: accounts,
         };
-    }, [responsesByRundate]);
+    }, [accounts]);
 
     return (
         <div className='p-4'>
             <div className='flex flex-row gap-2 items-center '>
-                <DateSelector
-                    date={date}
-                    setDate={setDate}
-                    disabledDays={disabledDays}
-                />
-
-                <Button
-                    className='cursor-pointer'
-                    onClick={handleSearch}
-                >查询</Button>
 
                 <Export
                     sheetInstance={sheetInstance}
-                    fileName={'响应评估结果公示_' + (date ? format(date, "yyyy-MM-dd") : '')}
+                    fileName={'商户列表'}
                 >
                     <Button>复制/导出</Button>
                 </Export>
@@ -129,7 +93,7 @@ export default function Page() {
                     }}
                 >
                     <SheetComponent
-                        key={date ? format(date, "yyyy-MM-dd") : 'default'} // 添加key属性
+                        key={'account-table'} // 添加key属性
                         sheetType="table"
                         dataCfg={dataConfig}
                         options={s2Options}
@@ -150,68 +114,61 @@ export default function Page() {
 
 const defaultDataCfg = {
     "describe": "标准明细表数据。",
-
     "fields": {
         "columns": [
-            "demand_no",
-            "account_id",
-            "account_name",
-            "agree_status",
-            "real_res",
-            "good_res",
-            "punish_res",
+            "id",
+            "name",
         ],
     },
     "meta": [
         {
-            "field": "account_id",
+            "field": "id",
             "name": "商户号"
         },
         {
-            "field": "account_name",
+            "field": "name",
             "name": "名称"
         },
-        {
-            "field": "agree_status",
-            "name": "确认状态"
-        },
-        {
-            "field": "appeal_record",
-            "name": "appeal_record"
-        },
-        {
-            "field": "demand_no",
-            "name": "邀约ID"
-        },
-        {
-            "field": "real_res",
-            "name": "实际容量"
-        },
-        {
-            "field": "good_res",
-            "name": "有效容量"
-        },
-        {
-            "field": "punish_res",
-            "name": "考核容量"
-        },
-
     ],
     data: [],
 };
 
+const cellTextWordWrapStyle = {
+    // 最大行数，文本超出后将被截断
+    maxLines: 4,
+    // 文本是否换行
+    wordWrap: true,
+    // 可选项见：https://g.antv.antgroup.com/api/basic/text#textoverflow
+    textOverflow: 'ellipsis',
+};
 const s2Options = {
     width: 600,
     height: 480,
-    dataCell: (viewMeta, spreadsheet) => {
-        return new CustomDataCell(viewMeta, spreadsheet);
-    },
     seriesNumber: {
         enable: true,
         text: '序号',
     },
     tooltip: {
-        enable: false
+        enable: false,
+        operation: {
+            // 开启组内排序 （默认开启）
+            sort: true,
+            menu: {
+                render: (props) => {
+                    return <Menu {...props} />;
+                },
+            }
+        },
+    },
+    sortParams: [
+        { sortFieldId: 'id', sortMethod: 'ASC' },
+        { sortFieldId: 'name', sortMethod: 'ASC' },
+    ],
+    showDefaultHeaderActionIcon: true,
+    showSeriesNumber: true,
+    hierarchyType: 'grid',
+    hierarchyColumnHeader: {
+        show: true,
     },
     interaction: {
         hoverHighlight: false,
@@ -233,6 +190,37 @@ const s2Options = {
     },
     style: {
         layoutWidthType: 'compact',    // 使用紧凑布局
+        seriesNumberCell: cellTextWordWrapStyle,
+        colCell: {
+            ...cellTextWordWrapStyle,
+            text: {
+                textAlign: 'left',
+                textBaseline: 'middle',
+            }
+        },
+        cornerCell: {
+            ...cellTextWordWrapStyle,
+            text: {
+                textAlign: 'left',
+                textBaseline: 'middle',
+            }
+        },
+        rowCell: {
+            ...cellTextWordWrapStyle,
+            height: 32,
+            text: {
+                textAlign: 'left',
+                textBaseline: 'middle',
+            }
+        },
+        dataCell: {
+            text: {
+                textAlign: 'left',
+                textBaseline: 'middle',
+            }
+        }
+        // 数值不建议换行, 容易产生歧义
+        // dataCell: cellTextWordWrapStyle,
     },
     // 减少不必要的渲染
     frozenRowHeader: true,
@@ -247,37 +235,3 @@ const onUpdate = (renderOptions) => {
 const onUpdateAfterRender = (renderOptions) => {
     console.log('onUpdateAfterRender:', renderOptions);
 };
-
-class CustomDataCell extends DataCell {
-    initCell() {
-        super.initCell();
-    }
-
-    renderImage() {
-        this.drawTextShape();
-    }
-
-    getStyle(name) {
-        // 重写单元格样式
-        const defaultCellStyle = super.getStyle(name);
-        return defaultCellStyle;
-    }
-
-    getBackgroundColor() {
-        return super.getBackgroundColor();
-    }
-
-    getTextStyle() {
-        const defaultTextStyle = super.getTextStyle();
-        console.log('getTextStyle:', this);
-        if (['$$series_number$$', 'account_id', 'account_name', 'demand_no', 'agree_status']
-            .includes(this.meta.valueField)) {
-            return {
-                ...defaultTextStyle,
-                textAlign: 'left',
-            };
-        }
-        // 使用默认处理
-        return super.getTextStyle();
-    }
-}

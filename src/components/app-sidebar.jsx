@@ -63,9 +63,9 @@ const data = {
       icon: IconFolder,
     },
     {
-      key: 'user',
-      title: "待推出...",
-      url: "#",
+      key: 'accounts',
+      title: "商户列表",
+      url: "/accounts",
       icon: IconUsers,
     },
   ],
