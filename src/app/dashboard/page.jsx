@@ -1,6 +1,7 @@
 
 import { Button } from "@/components/ui/button"
 import { ChartAreaRundate } from "@/components/chart-area-rundate"
+// import ChartAreaRundate from "@/components/chart-area-interactive"
 import { SectionCards } from "@/components/section-cards"
 function App() {
     return (

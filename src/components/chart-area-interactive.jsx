@@ -128,15 +128,16 @@ const chartConfig = {
 
   desktop: {
     label: "Desktop",
-    color: "var(--primary)",
+    color: "hsl(var(--chart-1))", // 使用 CSS 变量，并用 hsl() 包裹以确保兼容性
   },
 
   mobile: {
     label: "Mobile",
-    color: "var(--primary)",
+    color: "hsl(var(--chart-2))", // 使用 CSS 变量，并用 hsl() 包裹以确保兼容性
   }
 }
 
+export default ChartAreaInteractive;
 export function ChartAreaInteractive() {
   const isMobile = useIsMobile()
   const [timeRange, setTimeRange] = React.useState("90d")
@@ -208,12 +209,14 @@ export function ChartAreaInteractive() {
           <AreaChart data={filteredData}>
             <defs>
               <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--color-desktop)" stopOpacity={1.0} />
-                <stop offset="95%" stopColor="var(--color-desktop)" stopOpacity={0.1} />
+                {/* 使用正确的 CSS 变量 */}
+                <stop offset="5%" stopColor="var(--color-chart-1)" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="var(--color-chart-1)" stopOpacity={0.1} />
               </linearGradient>
               <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--color-mobile)" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="var(--color-mobile)" stopOpacity={0.1} />
+                {/* 使用正确的 CSS 变量 */}
+                <stop offset="5%" stopColor="var(--color-chart-2)" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="var(--color-chart-2)" stopOpacity={0.1} />
               </linearGradient>
             </defs>
             <CartesianGrid vertical={false} />
@@ -246,15 +249,19 @@ export function ChartAreaInteractive() {
             <Area
               dataKey="mobile"
               type="natural"
-              fill="url(#fillMobile)"
-              stroke="var(--color-mobile)"
-              stackId="a" />
+              fill="url(#fillMobile)" // 使用上面定义的渐变
+              fillOpacity={1} // fillOpacity 设置为 1，因为渐变本身包含透明度
+              stroke="var(--color-chart-2)" // 使用正确的 CSS 变量
+              stackId="a"
+            />
             <Area
               dataKey="desktop"
               type="natural"
-              fill="url(#fillDesktop)"
-              stroke="var(--color-desktop)"
-              stackId="a" />
+              fill="url(#fillDesktop)" // 使用上面定义的渐变
+              fillOpacity={1} // fillOpacity 设置为 1，因为渐变本身包含透明度
+              stroke="var(--color-chart-1)" // 使用正确的 CSS 变量
+              stackId="a"
+            />
           </AreaChart>
         </ChartContainer>
       </CardContent>

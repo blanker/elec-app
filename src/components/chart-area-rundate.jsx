@@ -36,14 +36,15 @@ const chartConfig = {
   },
   cnt: {
     label: "需求响应申报",
-    color: "var(--primary)",
+    color: "hsl(var(--chart-1))", // 使用 CSS 变量
   },
   account_cnt: {
     label: "响应结果评估",
-    color: "var(--primary)",
+    color: "hsl(var(--chart-2))", // 使用 CSS 变量
   }
 }
 
+export default ChartAreaRundate;
 export function ChartAreaRundate() {
   const isMobile = useIsMobile()
   const [timeRange, setTimeRange] = React.useState("90d")
@@ -98,7 +99,6 @@ export function ChartAreaRundate() {
           <span className="hidden @[540px]/card:block">
             运行日统计
           </span>
-          <span className="@[540px]/card:hidden">Last 3 months</span>
         </CardDescription>
 
       </CardHeader>
@@ -107,12 +107,12 @@ export function ChartAreaRundate() {
           <AreaChart data={chartData}>
             <defs>
               <linearGradient id="fillCnt" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--color-cnt)" stopOpacity={1.0} />
-                <stop offset="95%" stopColor="var(--color-cnt)" stopOpacity={0.1} />
+                <stop offset="5%" stopColor="var(--color-chart-1)" stopOpacity={1.0} />
+                <stop offset="95%" stopColor="var(--color-chart-1)" stopOpacity={0.1} />
               </linearGradient>
               <linearGradient id="fillAccountCnt" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--color-account-cnt)" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="var(--color-account-cnt)" stopOpacity={0.1} />
+                <stop offset="5%" stopColor="var(--color-chart-2)" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="var(--color-chart-2)" stopOpacity={0.1} />
               </linearGradient>
             </defs>
             <CartesianGrid vertical={false} />
@@ -149,13 +149,13 @@ export function ChartAreaRundate() {
               dataKey="cnt"
               type="natural"
               fill="url(#fillCnt)"
-              stroke="var(--color-cnt)"
+              stroke="var(--color-chart-1)"
               stackId="a" />
             <Area
               dataKey="account_cnt"
               type="natural"
               fill="url(#fillAccountCnt)"
-              stroke="var(--color-account-cnt)"
+              stroke="var(--color-chart-2)"
               stackId="a" />
           </AreaChart>
         </ChartContainer>

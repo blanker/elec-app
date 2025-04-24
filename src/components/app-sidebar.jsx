@@ -60,9 +60,9 @@ const data = {
       icon: IconChartBar,
     },
     {
-      key: 'report',
-      title: "待推出...",
-      url: "#",
+      key: 'settlement',
+      title: "月结算报表",
+      url: "/settlement",
       icon: IconFolder,
     },
     {
