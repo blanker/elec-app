@@ -120,11 +120,22 @@ export default function Page() {
                             value: valueNum,
                         });
                     })
+                } else {
+                    // 没有数据的，直接插入16行数据
+                    defaultTimes.forEach((time) => {
+                        list.push({
+                            account_id,
+                            account_name: accounts.find(it => it.id === account_id)?.name ?? account_id,
+                            time,
+                            value: '-',
+                        });
+                    })
                 }
             } catch (e) {
                 console.warn('处理出错了', e);
             }
         });
+
         const zeroTimes = Object.entries(times)
             .filter(([_, value]) => value === 0)
             .map(([key]) => key);
@@ -165,7 +176,7 @@ export default function Page() {
                     account_id,
                     account_name,
                     time: '平均值',
-                    avg: avg.toFixed(2),
+                    avg: isNaN(avg) ? '-' : avg.toFixed(2),
                 });
                 computed.push({
                     account_id,
@@ -183,25 +194,25 @@ export default function Page() {
                     account_id,
                     account_name,
                     time: '高于平均值',
-                    upAavg: upAavg,
+                    upAavg: isNaN(avg) ? '-' : upAavg,
                 });
                 computed.push({
                     account_id,
                     account_name,
                     time: '低于平均值',
-                    belowAvg: belowAvg,
+                    belowAvg: isNaN(avg) ? '-' : belowAvg,
                 });
                 computed.push({
                     account_id,
                     account_name,
                     time: '低于平均值80%',
-                    belowAvg_80,
+                    belowAvg_80: isNaN(avg) ? '-' : belowAvg_80,
                 });
                 computed.push({
                     account_id,
                     account_name,
                     time: '高于平均值120%',
-                    upAvg_120,
+                    upAvg_120: isNaN(avg) ? '-' : upAvg_120,
                 });
             });
         console.log('computed', computed);
@@ -292,7 +303,12 @@ export default function Page() {
         </div>
     );
 }
-
+const defaultTimes = [
+    '12:00', '12:15', '12:30', '12:45',
+    '13:00', '13:15', "13:30", "13:45",
+    '14:00', '14:15', '14:30', '14:45',
+    '15:00', '15:15', "15:30", "15:45",
+]
 const defaultDataCfg = {
     "describe": "标准交叉表数据。",
     sortParams: [
