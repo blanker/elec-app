@@ -62,9 +62,18 @@ export const login = async (request, env, context) => {
         // 生成token
         const token = await generateToken(user.id, env);
         console.log('token: ', token);
-        const { id, name, } = user;
+        const { id, name, tenant_id, tenant } = user;
         // 返回用户信息和token
-        return json({ success: true, data: { id, name, phone, token } });
+        return json({
+            success: true, data: {
+                id,
+                name,
+                phone,
+                token,
+                tenant_id,
+                tenant,
+            }
+        });
 
     } catch (error) {
         console.error("Error inserting data:", error);
@@ -87,7 +96,10 @@ export const getUser = async (phone, env) => {
         if (result.results.length == 0) {
             return null;
         }
-        return result.results[0];
+        const user = result.results[0];
+        const tenant = await getTenant(user.tenant_id, env);
+        user.tenant = tenant;
+        return user;
     } catch (error) {
         console.error("Error inserting data:", error);
         return null;
@@ -95,6 +107,29 @@ export const getUser = async (phone, env) => {
 
 };
 
+export const getTenant = async (tenant_id, env) => {
+
+    try {
+
+        const sql = `
+    SELECT * FROM tenant WHERE id = ? 
+    `
+        console.log('sql: ', sql);
+        const result = await env.DB.prepare(sql)
+            .bind(tenant_id)
+            .run();
+
+        if (result.results.length == 0) {
+            return null;
+        }
+
+        return result.results[0];
+    } catch (error) {
+        console.error("Error get tenant data:", error);
+        return null;
+    }
+
+};
 
 // 生成盐值
 async function generateSalt(phone) {
