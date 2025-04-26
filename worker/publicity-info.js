@@ -18,18 +18,26 @@ export const saveResponses = async (request, env, context) => {
         //   ],
         //     "total": 1
         // }
-        const { data } = await request.json();
+        const { data, tenant, tenant_name } = await request.json();
         console.log('【service_worker.js】->【content】【ajax-tools-iframe-show】Return message:', data);
         const sql = `
-      INSERT INTO bu_response_cap (account_id, account_name, agree_status, appeal_record, demand_no, good_res, list_id, punish_res, real_res)
-           VALUES (?,?,?,?,?,?,?,?,?)
+      INSERT INTO bu_response_cap (
+      account_id, account_name, agree_status, 
+      appeal_record, demand_no, good_res, 
+      list_id, punish_res, real_res,
+        tenant_id, tenant_name, update_time
+      )
+           VALUES (?,?,?,  ?,?,?,  ?,?,?, ?,?, CURRENT_TIMESTAMP)
         ON CONFLICT(account_id, demand_no, list_id) DO UPDATE SET
           account_name=excluded.account_name,
           agree_status=excluded.agree_status,
           appeal_record=excluded.appeal_record,
           good_res=excluded.good_res,
           punish_res=excluded.punish_res,
-          real_res=excluded.real_res
+          real_res=excluded.real_res,
+          tenant_id=excluded.tenant_id,
+          tenant_name=excluded.tenant_name,
+          update_time=excluded.update_time
       `;
         console.log('sql: ', sql);
         for (const item of data.rows) {
@@ -45,7 +53,9 @@ export const saveResponses = async (request, env, context) => {
                     goodRes ?? null,
                     listId ?? null,
                     punishRes ?? null,
-                    realRes ?? null
+                    realRes ?? null,
+                    tenant ?? null,
+                    tenant_name ?? null
                 )
                 .run();
         }
@@ -132,19 +142,31 @@ ORDER BY run_date ASC;
 export const savePublicityInfoList = async (request, env, context) => {
 
     try {
-        const { data } = await request.json();
+        const { data, tenant, tenant_name } = await request.json();
         console.log('【service_worker.js】->【content】【ajax-tools-iframe-show】Return message:', data);
         const sql = `
-    INSERT INTO publicity_info (run_date, invited_id, start_date, end_date)
-         VALUES (?,?,?,?)
+    INSERT INTO publicity_info (
+    run_date, invited_id, start_date, end_date, 
+    tenant_id, tenant_name, update_time)
+         VALUES (?,?,?,?, ?,?,CURRENT_TIMESTAMP)
       ON CONFLICT(run_date, invited_id) DO UPDATE SET
         start_date=excluded.start_date,
-        end_date=excluded.end_date
+        end_date=excluded.end_date,
+        tenant_id=excluded.tenant_id,
+        tenant_name=excluded.tenant_name,
+        update_time=excluded.update_time
     `
         console.log('sql: ', sql);
         for (const item of data) {
             await env.DB.prepare(sql)
-                .bind(item.run_date, item.invited_id, item.start_date, item.end_date)
+                .bind(
+                    item.run_date,
+                    item.invited_id,
+                    item.start_date,
+                    item.end_date,
+                    tenant ?? null,
+                    tenant_name ?? null
+                )
                 .run();
         }
 

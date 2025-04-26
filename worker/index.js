@@ -10,6 +10,7 @@ import {
 import { saveDevices } from './device.js';
 import { saveDeclaration, statDeclarationRundates, getDeclarationsByRundate } from './declaration.js';
 import { saveAccounts, getAccounts } from './account.js';
+import { saveCustomer } from './customer.js';
 import { saveSettlements, countByMonth, fetchByMonth } from './settlement.js';
 import { newUser, login, authMiddleware } from './user.js';
 
@@ -79,6 +80,8 @@ router.post('/api/table-data/bu-response-cap', saveResponses);
 router.post('/api/private/responses', statResponses);
 router.post('/api/private/stat-response-group-by-rundate', statResponseGroupByRundate);
 router.post('/api/private/get-responses-by-rundate', getResponsesByRundate);
+
+router.post('/api/table-data/customer', saveCustomer);
 
 router.post('/api/table-data/settlement', saveSettlements);
 router.post('/api/private/settlement-count-by-month', countByMonth);

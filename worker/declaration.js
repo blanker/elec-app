@@ -2,7 +2,7 @@ import { json } from 'itty-router' // ~1kB
 
 export const saveDeclaration = async (request, env, context) => {
     try {
-        const { data, extra } = await request.json();
+        const { data, extra, tenant, tenant_name } = await request.json();
         console.log('【service_worker.js】->【content】【ajax-tools-iframe-show】Return message:', data);
         if (!extra.run_date) {
             return json({ success: true, name: 'NO RUN_DATE' });
@@ -38,7 +38,13 @@ score,
 
 userState,
 voltLevel,
-voltagekV
+voltagekV,
+
+tenant_id, 
+tenant_name,
+
+update_time
+
 )
          VALUES (
          ?,?,
@@ -46,7 +52,8 @@ voltagekV
          ?,?,?,?,?,
          ?,?,?,?,?,
          ?,?,?,?,?,
-         ?,?,?
+         ?,?,?,
+         ?,?, CURRENT_TIMESTAMP
         )
       ON CONFLICT(account_id, run_date) DO UPDATE SET
         capAbility=excluded.capAbility,
@@ -71,7 +78,10 @@ respTime=excluded.respTime,
 score=excluded.score,
 userState=excluded.userState,
 voltLevel=excluded.voltLevel,
-voltagekV=excluded.voltagekV
+voltagekV=excluded.voltagekV,
+tenant_id=excluded.tenant_id,
+tenant_name=excluded.tenant_name,
+update_time=excluded.update_time
     `
         console.log('sql: ', sql);
         const {
@@ -124,7 +134,9 @@ voltagekV=excluded.voltagekV
             score,
             userState,
             voltLevel,
-            voltagekV
+            voltagekV,
+
+            tenant
         });
 
         await env.DB.prepare(sql)
@@ -153,7 +165,9 @@ voltagekV=excluded.voltagekV
                 score ?? null,
                 userState ?? null,
                 voltLevel ?? null,
-                voltagekV ?? null
+                voltagekV ?? null,
+                tenant ?? null,
+                tenant_name ?? null
             )
             .run();
     } catch (error) {

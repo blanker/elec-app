@@ -3,7 +3,7 @@ import { json } from 'itty-router' // ~1kB
 export const saveSettlements = async (request, env, context) => {
 
     try {
-        const { data } = await request.json();
+        const { data, tenant, tenant_name } = await request.json();
         console.log('【service_worker.js】->【content】【ajax-tools-iframe-show】Return message:', data);
         /* {
         "account": "楚雄移动展厅",
@@ -15,16 +15,22 @@ export const saveSettlements = async (request, env, context) => {
      run_month, 
      account_name, 
      fee_sum, 
+
      month_load, 
      res_fee_sum, 
      share_fee, 
      share_price,
+
      ass_fee_sum,
      bu_sharing,
      la_sharing,
-     gain_sharing
+     gain_sharing,
+
+     tenant_id, 
+     tenant_name,
+     update_time
     )
-         VALUES (?,?,?,?, ?,?,?,?, ?,?,?,?)
+         VALUES (?,?,?,?, ?,?,?,?, ?,?,?,?, ?,?,CURRENT_TIMESTAMP)
       ON CONFLICT(account_id, run_month) DO UPDATE SET
         account_name=excluded.account_name,
         fee_sum=excluded.fee_sum,
@@ -35,7 +41,10 @@ export const saveSettlements = async (request, env, context) => {
         ass_fee_sum=excluded.ass_fee_sum,
         bu_sharing=excluded.bu_sharing,
         la_sharing=excluded.la_sharing,
-        gain_sharing=excluded.gain_sharing
+        gain_sharing=excluded.gain_sharing,
+        tenant_id=excluded.tenant_id,
+        tenant_name=excluded.tenant_name,
+        update_time=excluded.update_time
     `
         console.log('sql: ', sql);
         for (const item of data.rows) {
@@ -69,7 +78,9 @@ export const saveSettlements = async (request, env, context) => {
                     assFeeSum ?? null,
                     buSharing ?? null,
                     laSharing ?? null,
-                    gainSharing ?? null
+                    gainSharing ?? null,
+                    tenant ?? null,
+                    tenant_name ?? null
                 )
                 .run();
         }
