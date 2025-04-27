@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>扩展弹出页</title>
+  <style>
+    body {
+      width: 300px;
+      padding: 10px;
+      font-family: Arial, sans-serif;
+    }
+    h1 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    .stats {
+      margin-bottom: 15px;
+    }
+    .button-container {
+      display: flex;
+      gap: 10px;
+    }
+    button {
+      padding: 8px 12px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .export-btn {
+      background-color: #2196F3;
+    }
+    .export-btn:hover {
+      background-color: #0b7dda;
+    }
+    .clear-btn {
+      background-color: #f44336;
+    }
+    .clear-btn:hover {
+      background-color: #d32f2f;
+    }
+  </style>
+</head>
+<body>
+  <h1>数据采集扩展</h1>
+  
+  <div class="stats">
+    <div>点击次数: <span id="clickCount">0</span></div>
+    <div>采集数据: <span id="dataCount">0</span> 条</div>
+  </div>
+  
+  <div class="button-container">
+    <button id="exportBtn" class="export-btn">导出数据</button>
+    <button id="clearBtn" class="clear-btn">清除数据</button>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+{
+    "name": "电力交易数据",
+    "version": "1.0.0",
+    "manifest_version": 3,
+    "description": "Chrome Extension",
+    "icons": {
+        "16": "icons/icon16.png",
+        "32": "icons/icon32.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+    },
+    "permissions": [
+        "sidePanel",
+        "webRequest",
+        "scripting",
+        "storage",
+        "debugger",
+        "tabs",
+        "activeTab",
+        "unlimitedStorage",
+        "declarativeNetRequest",
+        "declarativeNetRequestFeedback",
+        "declarativeNetRequestWithHostAccess"
+    ],
+    "side_panel": {
+        "default_path": "popup/index.html?source=sidePanel"
+    },
+    "host_permissions": [
+        "http://*/*",
+        "https://*/*",
+        "http://localhost:*/*"
+    ],
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://kmpex.com/*",
+                "https://www.kmpex.com/*",
+                "https://*.blanker.cc/*"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "run_at": "document_start",
+            "all_frames": true
+        }
+    ],
+    "action": {
+        "default_popup": "popup/index.html?source=popup",
+        "default_title": "电力交易平台数据",
+        "default_icon": {
+            "16": "icons/icon16.png",
+            "32": "icons/icon32.png",
+            "48": "icons/icon48.png"
+        }
+    },
+    "content_security_policy": {
+        "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; connect-src http://elec.blanker.cc https://elec.blanker.cc http://localhost:*;"
+    },
+    "declarative_net_request": {
+        "rule_resources": []
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "popup/index.html",
+                "html/iframePage/dist/index.html",
+                "html/iframePage/dist/declarativeNetRequest.html",
+                "pageScript.js",
+                "html/iframePage/mock.js",
+                "icons/iconfont/iconfont.css",
+                "icons/iconfont/iconfont.woff2",
+                "icons/iconfont/iconfont.woff",
+                "icons/iconfont/iconfont.ttf"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ]
+}

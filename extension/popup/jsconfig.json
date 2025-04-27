@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".", // 表示 baseUrl 是当前目录 (popup/)
+        "paths": {
+            "@/*": ["./src/*"] // 定义 @/* 指向 ./src/*
+        }
+    },
+    "include": ["src/**/*"], // 包含 src 目录下的所有文件
+    "exclude": ["node_modules", "dist"] // 排除 node_modules 和 dist 目录
+}

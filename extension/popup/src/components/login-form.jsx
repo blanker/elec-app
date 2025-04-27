@@ -28,7 +28,13 @@ import {
 } from "@/components/ui/form";
 import { useNavigate } from "react-router";
 
-import useUserStore from "@/store/useUserStore"
+import useCommonStore from "@/store/useCommonStore"
+// import Logo from "../../assets/images/electricty-icon.svg?react";
+import Logo from '@/assets/image/electricity-icon.svg?react';
+// import logoUrl, { ReactComponent as Logo } from '@/assets/image/electricity-icon.svg';
+
+// console.log("logoUrl", logoUrl);
+// console.log("Logo", Logo);
 
 const FormSchema = z.object({
   phone: z.string().min(11, {
@@ -47,7 +53,7 @@ export function LoginForm({
 }) {
   let navigate = useNavigate();
 
-  const { user, login, error, loading } = useUserStore(
+  const { user, login, error, loading } = useCommonStore(
     useShallow((state) => ({
       user: state.user,
       login: state.login,
@@ -81,7 +87,7 @@ export function LoginForm({
           {/* 放一个合适的图标 */}
 
           <CardAction>
-            <img src='/electricity-icon.svg' alt='electricity' className='h-5 w-5' />
+            <Logo className='w-4 h-4' />
           </CardAction>
         </CardHeader>
         <CardContent>

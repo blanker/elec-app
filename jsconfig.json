@@ -2,7 +2,8 @@
     "files": [],
     "references": [
         {
-            "path": "./jsconfig.app.json"
+            "path": "./jsconfig.app.json",
+            "composite": true
         }
     ],
     "compilerOptions": {
@@ -12,5 +13,12 @@
                 "./src/*"
             ]
         }
-    }
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
 }

@@ -19,7 +19,6 @@ const useUserStore = create(immer(persist((set) => ({
     },
     login: async (data) => {
         try {
-            console.log('开始登录:', data);
             set(state => { state.loading = true; state.error = null; });
             const response = await apiClient.post('/login', { data });
             if (response.data.success) {
@@ -37,7 +36,6 @@ const useUserStore = create(immer(persist((set) => ({
                 });
                 return false;
             }
-            console.log('登录成功:', response.data);
         } catch (error) {
             console.error('登录失败:', error);
             set(state => {
