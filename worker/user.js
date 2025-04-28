@@ -107,6 +107,32 @@ export const getUser = async (phone, env) => {
 
 };
 
+export const getUserById = async (id, env) => {
+
+    try {
+
+        const sql = `
+    SELECT * FROM user WHERE id = ? 
+    `
+        console.log('sql: ', sql);
+        const result = await env.DB.prepare(sql)
+            .bind(id)
+            .run();
+
+        if (result.results.length == 0) {
+            return null;
+        }
+        const user = result.results[0];
+        const tenant = await getTenant(user.tenant_id, env);
+        user.tenant = tenant;
+        return user;
+    } catch (error) {
+        console.error("Error inserting data:", error);
+        return null;
+    }
+
+};
+
 export const getTenant = async (tenant_id, env) => {
 
     try {
@@ -231,7 +257,14 @@ export async function authMiddleware(request, env) {
         return { success: false, error: 'token无效或已过期' };
     }
 
-    return { success: true, userId: payload.userId };
+    const user = await getUserById(payload.userId, env); // 验证token后，获取用户信息，保存在上下文中，供后续使用
+    console.log('authMiddleware userId: ', payload.userId, user);
+
+    return {
+        success: true,
+        userId: payload.userId,
+        user
+    };
 }
 
 /*

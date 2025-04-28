@@ -30,6 +30,50 @@ settlement
 }
 
 ```sql
+create index idx_account_tenant ON account (tenant_id);
+create index idx_bu_tad ON bu_response_cap(tenant_id, account_id, demand_no);
+create index idx_daily_tr ON daily_demand_market(tenant_id, run_date);
+create index idx_publicty_tri ON publicity_info(tenant_id,run_date,invited_id);
+create index idx_settlement_tr ON settlement(tenant_id, run_month);
+
+> EXPLAIN QUERY PLAN SELECT run_date, count(*) as cnt FROM daily_demand_market WHERE tenant_id = '91440101MA5D693M4Q' GROUP BY run_date ORDER BY run_date ASC
+
+    EXPLAIN QUERY PLAN SELECT * 
+      FROM publicity_info
+     WHERE tenant_id = '91440101MA5D693M4Q' 
+     GROUP BY run_date, invited_id
+
+    EXPLAIN QUERY PLAN SELECT account_id, demand_no, count(*) as cnt 
+      FROM bu_response_cap
+     WHERE tenant_id ='91440101MA5D693M4Q'
+    GROUP BY account_id, demand_no
+    ORDER BY demand_no DESC, account_id ASC ;
+
+    EXPLAIN QUERY PLAN SELECT pi.run_date
+      ,count(*) as total
+      ,count(distinct brc.account_id) as account_cnt
+ FROM bu_response_cap brc
+    , publicity_info pi 
+WHERE brc.demand_no = pi.invited_id 
+  AND brc.tenant_id = pi.tenant_id
+  AND brc.tenant_id = '91440101MA5D693M4Q'
+GROUP BY run_date 
+ORDER BY run_date ASC;    
+
+EXPLAIN QUERY PLAN SELECT brc.*
+  FROM bu_response_cap brc, publicity_info pi
+WHERE brc.demand_no = pi.invited_id
+  AND brc.tenant_id = pi.tenant_id
+  AND brc.tenant_id = '91440101MA5D693M4Q'
+  AND pi.run_date = '2025-04-20'
+ORDER BY brc.account_id ASC;
+
+    EXPLAIN QUERY PLAN SELECT *
+      FROM settlement 
+     WHERE tenant_id = '91440101MA5D693M4Q'
+       AND run_month = '2025-02'
+     ORDER BY account_id
+
 alter table account add column tenant_name text;
 alter table bu_response_cap add column tenant_name text;
 alter table daily_demand_market add column tenant_name text;

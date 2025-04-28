@@ -109,7 +109,7 @@ export function LoginForm({
                   <FormItem>
                     <FormLabel>密码</FormLabel>
                     <FormControl>
-                      <Input placeholder="密码" {...field} />
+                      <Input type="password" placeholder="密码" {...field} />
                     </FormControl>
                     <FormDescription>
                     </FormDescription>

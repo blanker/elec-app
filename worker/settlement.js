@@ -94,16 +94,18 @@ export const saveSettlements = async (request, env, context) => {
 };
 
 export async function countByMonth(request, env, context) {
-
+    console.log('countByMonth', request.user);
     try {
         const sql = `
     SELECT run_month,count(*) cnt
       FROM settlement 
+     WHERE tenant_id = ?
      GROUP BY run_month
      ORDER BY run_month
     `
         console.log('sql: ', sql);
         const result = await env.DB.prepare(sql)
+            .bind(request?.user?.tenant?.id)
             .run();
 
         return json({
@@ -118,17 +120,19 @@ export async function countByMonth(request, env, context) {
 }
 
 export async function fetchByMonth(request, env, context) {
+    console.log('countByMonth', request.user);
     const { data } = await request.json();
     try {
         const sql = `
     SELECT *
       FROM settlement 
-     WHERE run_month = ?
+     WHERE tenant_id = ?
+       AND run_month = ?
      ORDER BY account_id
     `
         console.log('sql: ', sql);
         const result = await env.DB.prepare(sql)
-            .bind(data.date)
+            .bind(request?.user?.tenant?.id, data.date)
             .run();
 
         return json({

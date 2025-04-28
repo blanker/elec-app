@@ -67,13 +67,17 @@ export const saveResponses = async (request, env, context) => {
 };
 
 export async function getPublicityInfoList(request, env, context) {
-
+    console.log('getPublicityInfoList', request.user);
     try {
         const sql = `
-    SELECT * FROM publicity_info GROUP BY run_date, invited_id
+    SELECT * 
+      FROM publicity_info
+     WHERE tenant_id = ?
+     GROUP BY run_date, invited_id
     `
         console.log('sql: ', sql);
         const result = await env.DB.prepare(sql)
+            .bind(request?.user?.tenant?.id)
             .run();
 
         return json({
@@ -88,16 +92,18 @@ export async function getPublicityInfoList(request, env, context) {
 }
 
 export const statResponses = async (request, env, context) => {
-
+    console.log('statResponses', request.user);
     try {
         const sql = `
     SELECT account_id, demand_no, count(*) as cnt 
-      FROM bu_response_cap 
+      FROM bu_response_cap
+     WHERE tenant_id =?
     GROUP BY account_id, demand_no
     ORDER BY demand_no DESC, account_id ASC
     `
         console.log('sql: ', sql);
         const result = await env.DB.prepare(sql)
+            .bind(request?.user?.tenant?.id)
             .run();
 
         return json({
@@ -112,7 +118,7 @@ export const statResponses = async (request, env, context) => {
 };
 
 export const statResponseGroupByRundate = async (request, env, context) => {
-
+    console.log('statResponseGroupByRundate', request.user);
     try {
         const sql = `
 SELECT pi.run_date
@@ -121,11 +127,14 @@ SELECT pi.run_date
  FROM bu_response_cap brc
     , publicity_info pi 
 WHERE brc.demand_no = pi.invited_id 
+  AND brc.tenant_id = pi.tenant_id
+  AND brc.tenant_id =?
 GROUP BY run_date 
 ORDER BY run_date ASC;
     `
         console.log('sql: ', sql);
         const result = await env.DB.prepare(sql)
+            .bind(request?.user?.tenant?.id)
             .run();
 
         return json({
@@ -179,18 +188,22 @@ export const savePublicityInfoList = async (request, env, context) => {
 };
 
 export const getResponsesByRundate = async (request, env, context) => {
+    console.log('statResponseGroupByRundate', request.user);
+
     const { run_date } = await request.json();
     try {
         const sql = `
 SELECT brc.*
   FROM bu_response_cap brc, publicity_info pi
 WHERE brc.demand_no = pi.invited_id
+  AND brc.tenant_id = pi.tenant_id
+  AND brc.tenant_id =?
   AND pi.run_date = ?
 ORDER BY brc.account_id ASC;
     `
         console.log('sql: ', sql);
         const result = await env.DB.prepare(sql)
-            .bind(run_date)
+            .bind(request?.user?.tenant?.id, run_date)
             .run();
 
         return json({

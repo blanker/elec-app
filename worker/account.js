@@ -39,13 +39,17 @@ export const saveAccounts = async (request, env, context) => {
 };
 
 export const getAccounts = async (request, env, context) => {
-
+    console.log('getAccounts', request.user);
     try {
         const sql = `
-    SELECT * FROM account ORDER BY id ASC
+    SELECT * 
+      FROM account 
+    WHERE tenant_id = ?
+    ORDER BY id ASC
     `
         console.log('sql: ', sql);
         const result = await env.DB.prepare(sql)
+            .bind(request?.user?.tenant?.id)
             .run();
 
         return json({

@@ -100,7 +100,7 @@ export function LoginForm({
                   <FormItem>
                     <FormLabel>手机号</FormLabel>
                     <FormControl>
-                      <Input placeholder="139xxxx" {...field} />
+                      <Input type='password' placeholder="139xxxx" {...field} />
                     </FormControl>
                     <FormDescription>
                     </FormDescription>

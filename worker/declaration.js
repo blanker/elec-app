@@ -179,13 +179,18 @@ update_time=excluded.update_time
 };
 
 export const statDeclarationRundates = async (request, env, context) => {
-
+    console.log('statDeclarationRundates', request.user);
     try {
         const sql = `
-    SELECT run_date, count(*) as cnt FROM daily_demand_market GROUP BY run_date ORDER BY run_date ASC
+    SELECT run_date, count(*) as cnt 
+      FROM daily_demand_market
+     WHERE tenant_id = ?
+     GROUP BY run_date 
+     ORDER BY run_date ASC
     `
         console.log('sql: ', sql);
         const result = await env.DB.prepare(sql)
+            .bind(request?.user?.tenant?.id)
             .run();
 
         return json({
@@ -200,16 +205,18 @@ export const statDeclarationRundates = async (request, env, context) => {
 };
 
 export const getDeclarationsByRundate = async (request, env, context) => {
+    console.log('statDeclarationRundates', request.user);
     const { run_date } = await request.json();
     try {
         const sql = `
     SELECT * FROM daily_demand_market 
-     WHERE run_date = ?
+     WHERE tenant_id =?
+       AND run_date = ?
      ORDER BY account_id ASC
     `
         console.log('sql: ', sql);
         const result = await env.DB.prepare(sql)
-            .bind(run_date)
+            .bind(request?.user?.tenant?.id, run_date)
             .run();
 
         return json({

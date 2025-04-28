@@ -51,7 +51,8 @@ const withAuthenticatedUser = async (request, env) => {
   if (!user.success) return error(401, 'Invalid user.')
 
   // otherwise, we embed the user for future use
-  request.user = user.userId;
+  request.userId = user.userId;
+  request.user = user.user;
 }
 
 router
