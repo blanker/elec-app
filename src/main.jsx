@@ -4,10 +4,13 @@ import { RouterProvider } from "react-router";
 import routes from './routes';
 import './index.css'
 import { ThemeProvider } from "@/components/theme-provider"
+import { MenuProvider } from "@/context/menu-context";
 
 // defaultAlgorithm
 createRoot(document.getElementById('root')).render(
   <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-    <RouterProvider router={routes} />
+    <MenuProvider>
+      <RouterProvider router={routes} />
+    </MenuProvider>
   </ThemeProvider>
 )

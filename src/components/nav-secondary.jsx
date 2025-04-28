@@ -8,11 +8,17 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { useMenuContext } from "@/context/menu-context";
 
 export function NavSecondary({
   items,
   ...props
 }) {
+  const {
+    currentMenu,
+    setCurrentMenu,
+    menus,
+  } = useMenuContext();
   return (
     (<SidebarGroup {...props}>
       <SidebarGroupContent>

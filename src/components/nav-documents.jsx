@@ -18,12 +18,17 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { useMenuContext } from "@/context/menu-context";
 
 export function NavDocuments({
   items
 }) {
   const { isMobile } = useSidebar()
-
+  const {
+    currentMenu,
+    setCurrentMenu,
+    menus,
+  } = useMenuContext();
   return (
     (<SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>Documents</SidebarGroupLabel>

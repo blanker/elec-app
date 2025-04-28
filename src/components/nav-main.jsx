@@ -9,11 +9,28 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { useNavigate } from "react-router";
+import { useMenuContext } from "@/context/menu-context";
+import { useShallow } from 'zustand/react/shallow'
+import useUserStore from "@/store/useUserStore"
 
 export function NavMain({
   items
 }) {
   const navigate = useNavigate();
+  const {
+    currentMenu,
+    setCurrentMenu,
+    menus,
+  } = useMenuContext();
+  const { user: userInfo, login, error, loading } = useUserStore(
+    useShallow((state) => ({
+      user: state.user,
+      login: state.login,
+      error: state.error,
+      loading: state.loading,
+    }))
+  );
+
   return (
     (<SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
@@ -39,9 +56,10 @@ export function NavMain({
             <SidebarMenuItem key={item.key ?? item.title} >
               <SidebarMenuButton
                 tooltip={item.title}
-                className='cursor-pointer'
+                className={`cursor-pointer ${currentMenu === item.key ? 'bg-primary/10 text-primary font-medium' : ''}`}
                 onClick={() => {
                   if (item.url) {
+                    setCurrentMenu(item.key);
                     navigate(item.url);
                   }
                 }}

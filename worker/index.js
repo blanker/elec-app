@@ -13,6 +13,7 @@ import { saveAccounts, getAccounts } from './account.js';
 import { saveCustomer } from './customer.js';
 import { saveSettlements, countByMonth, fetchByMonth } from './settlement.js';
 import { newUser, login, authMiddleware } from './user.js';
+import { getTenant } from './tenant.js';
 
 const { preflight, corsify } = cors({
   origin: '*',
@@ -90,6 +91,8 @@ router.post('/api/private/settlements-by-month', fetchByMonth);
 
 router.post('/api/private/table-data/new-user', newUser);
 router.post('/api/private/login', login);
+
+router.post('/api/private/tenants', getTenant);
 
 export default router;
 
