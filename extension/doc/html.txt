@@ -1,0 +1,1266 @@
+
+Simple:
+91440101MA5D693M4Q
+
+Simple:
+18468103960
+
+Simple:
+Dmm20230101@
+
+
+- TODO 解析表格数据 √， 找到分页组件/点击下一页 √
+- TODO 前端模拟点击下一页（直到没有下一页）√
+- TODO 前端模拟点击每一行（5秒一行），所有行完成后， 5秒后点击下一页 √
+- TODO 发送数据到后台服务：单位数据√ 指标数据√
+- TODO 后台建一个服务 √，接收单位数据，解析后，入库√； 接收指标，解析后，入库√；
+- TODO 前台展示数据
+
+
+
+
+
+const array2 = [, , , , , , , , , '用户分成收益(元)', '负荷聚合商分成收益(元)'];
+
+// 将数组转换为 Set 并比较
+function arraysEqual(arr1, arr2) {
+  return new Set(arr1).size === new Set(arr2).size && [...new Set(arr1)].every(element => new Set(arr2).has(element));
+}
+
+console.log(arraysEqual(array1, array2)); // 输出：true
+  
+
+页数： 1 - 3 - 5
+
+TODO 为了测试，获取最后一页，并从第一页到最后一页
+TODO 第一个菜单完成后，没有进入第二个菜单
+TODO 本身就在第一个菜单里
+
+curl -X POST \
+    -H "Content-Type: application/json" \
+    -d '{"data":{"rows":[{"accountId":"0502001401014381","accountName":"富源县祥麟食品有限责任公司","agreeStatus":"未确认","appealRecord":"0","demandNo":"20250414-05-003-03","goodRes":"13.5","listId":"LIST2a4cebd2952943af994fe9f3f6d530df","punishRes":"0","realRes":"26.77"}],"total":1},"timestamp":1745082649109,"extra":{"run_date":"2025-04-21"}}' \
+    http://localhost:4173/api/table-data/bu-response-cap/ 
+    
+curl -X POST \
+    -H "Content-Type: application/json" \
+    -d '{"data":{"capAbility":"13750","crtTime":1745075157000,"electricityType":"大工业用电","entityType":"需求侧响应用户","id":"0503001201274022","isEa":"N","loads":{"H03D45":0,"H04D15":0,"H10D15":0,"H06D30":0,"H22D00":0,"H07D00":0,"H21D30":0,"H13D15":7000,"H12D45":7280,"H15D30":15680,"H16D00":0,"H01D30":0,"H07D15":0,"H02D00":0,"H23D45":0,"H09D30":0,"H06D45":0,"H18D15":0,"H21D15":0,"H13D00":7000,"H17D45":0,"H12D30":6720,"H01D45":0,"H02D15":0,"H09D45":0,"H20D00":0,"H04D30":0,"H05D00":0,"H13D30":9520,"H14D00":11480,"H19D15":0,"H22D15":0,"H10D45":0,"H18D45":0,"H04D45":0,"H05D15":0,"H00D00":0,"H07D30":0,"H21D45":0,"H08D00":0,"H15D45":15960,"H16D15":0,"H11D00":0,"H18D30":0,"H10D30":0,"H19D00":0,"H03D00":0,"H08D15":0,"H22D45":0,"H23D15":0,"H07D45":0,"H02D30":0,"H16D45":0,"H17D15":0,"H20D15":0,"H19D30":0,"H12D00":7560,"H11D30":0,"H02D45":0,"H03D15":0,"H11D15":0,"H06D00":0,"H22D30":0,"H05D30":0,"H23D00":0,"H14D15":15400,"H00D15":0,"H13D45":10640,"H16D30":0,"H17D00":0,"H06D15":0,"H00D30":0,"IS24POINT":"N","H05D45":0,"H01D00":0,"H08D30":0,"H20D45":0,"H23D30":0,"H09D00":0,"H14D45":15680,"H15D15":15680,"H17D30":0,"H10D00":0,"H18D00":0,"H04D00":0,"H00D45":0,"H01D15":0,"H21D00":0,"H09D15":0,"H08D45":0,"H03D30":0,"H20D30":0,"H15D00":15400,"H12D15":7280,"H11D45":0,"H14D30":15680,"H19D45":0},"loads_gen":{"H03D00":0,"H03D45":0,"H08D15":0,"H04D15":0,"H10D15":0,"H22D45":0,"H06D30":0,"H22D00":0,"H23D15":0,"H07D45":0,"H02D30":0,"H07D00":0,"H21D30":0,"H16D45":0,"H17D15":0,"H20D15":0,"H13D15":560,"H12D45":0,"H19D30":0,"H12D00":0,"H15D30":0,"H11D30":0,"H16D00":0,"H01D30":0,"H02D45":0,"H07D15":0,"H02D00":0,"H03D15":0,"H11D15":0,"H23D45":0,"H06D00":0,"H09D30":0,"H22D30":0,"H06D45":0,"H05D30":0,"H23D00":0,"H18D15":0,"H14D15":0,"H21D15":0,"H00D15":0,"H13D45":0,"H16D30":0,"H13D00":280,"H17D45":0,"H12D30":280,"H17D00":0,"H06D15":0,"H00D30":0,"H05D45":0,"H01D00":0,"H01D45":0,"H02D15":0,"H09D45":0,"H08D30":0,"H20D00":0,"H20D45":0,"H04D30":0,"H05D00":0,"H23D30":0,"H09D00":0,"H13D30":0,"H14D00":0,"H14D45":0,"H19D15":0,"H15D15":0,"H22D15":0,"H10D45":0,"H17D30":0,"H10D00":0,"H18D00":0,"H18D45":0,"H04D45":0,"H04D00":0,"H05D15":0,"H00D00":0,"H00D45":0,"H01D15":0,"H07D30":0,"H21D00":0,"H21D45":0,"H09D15":0,"H08D45":0,"H03D30":0,"H08D00":0,"H20D30":0,"H15D00":0,"H15D45":0,"H16D15":0,"H12D15":0,"H11D00":0,"H11D45":0,"H18D30":0,"H10D30":0,"H14D30":0,"H19D00":0,"H19D45":0},"loads_use":{"H03D00":0,"H03D45":0,"H08D15":0,"H04D15":0,"H10D15":0,"H22D45":0,"H06D30":0,"H22D00":0,"H23D15":0,"H07D45":0,"H02D30":0,"H07D00":0,"H21D30":0,"H16D45":0,"H17D15":0,"H20D15":0,"H13D15":7560,"H12D45":7280,"H19D30":0,"H12D00":7560,"H15D30":15680,"H11D30":0,"H16D00":0,"H01D30":0,"H02D45":0,"H07D15":0,"H02D00":0,"H03D15":0,"H11D15":0,"H23D45":0,"H06D00":0,"H09D30":0,"H22D30":0,"H06D45":0,"H05D30":0,"H23D00":0,"H18D15":0,"H14D15":15400,"H21D15":0,"H00D15":0,"H13D45":10640,"H16D30":0,"H13D00":7280,"H17D45":0,"H12D30":7000,"H17D00":0,"H06D15":0,"H00D30":0,"H05D45":0,"H01D00":0,"H01D45":0,"H02D15":0,"H09D45":0,"H08D30":0,"H20D00":0,"H20D45":0,"H04D30":0,"H05D00":0,"H23D30":0,"H09D00":0,"H13D30":9520,"H14D00":11480,"H14D45":15680,"H19D15":0,"H15D15":15680,"H22D15":0,"H10D45":0,"H17D30":0,"H10D00":0,"H18D00":0,"H18D45":0,"H04D45":0,"H04D00":0,"H05D15":0,"H00D00":0,"H00D45":0,"H01D15":0,"H07D30":0,"H21D00":0,"H21D45":0,"H09D15":0,"H08D45":0,"H03D30":0,"H08D00":0,"H20D30":0,"H15D00":15400,"H15D45":15960,"H16D15":0,"H12D15":7280,"H11D00":0,"H11D45":0,"H18D30":0,"H10D30":0,"H14D30":15680,"H19D00":0,"H19D45":0},"locateArea":"050300","maxRespLoad":4750,"maxResponcePow":"4750","maxValleyLoad":0,"minRespLoad":1000,"minResponcePow":"1000","minValleyLoad":0,"resType":"工业负荷","respTime":"~","score":"133","userState":"RUN","voltLevel":"交流35kV","voltagekV":0},"timestamp":1745075740511,"extra":{"run_date":"2025-04-21"}}' \
+    http://localhost:4173/api/table-data/daily-demand-market/ 
+
+ curl -X POST \
+      -H "Content-Type: application/json" \
+      -d '{"data" : {"phone": "139", "name": "blank", "password": "123"}}' \
+      -v http://localhost:4173/api/private/table-data/new-user
+      
+
+ curl -X POST \
+      -H "Content-Type: application/json" \
+      -H "Authorization:Bearer eyJ1c2VySWQiOjEsImV4cCI6MTc0NTUwNTIwNDc5NiwiaWF0IjoxNzQ1NDE4ODA0Nzk2fQ==.0cd5611b025ea4454aba8990cbcde6d88dbb912156aca221e3477858f67f1f3b" \
+      -d '{"data" : {"phone": "18468103960", "name": "邓毛毛", "password": "103960"}}' \
+      -v http://elec.blanker.cc/api/private/table-data/new-user
+      
+ curl -X POST \
+      -H "Content-Type: application/json" \
+      -H "Authorization:Bearer eyJ1c2VySWQiOjIsImV4cCI6MTc0NTU4ODM4Njg0NCwiaWF0IjoxNzQ1NTAxOTg2ODQ0fQ==.05540a2398248e77a61b14739fd98370739a9f86ba77b5e7e415aeeefd2956d2" \
+      -d '{"data" : {"phone": "13887487478", "name": "周其义", "password": "487478"}}' \
+      -v http://elec.blanker.cc/api/private/table-data/new-user
+            
+ curl -X POST \
+      -H "Content-Type: application/json" \
+      -H "Authorization:Bearer eyJ1c2VySWQiOjEsImV4cCI6MTc0NTUwNTIwNDc5NiwiaWF0IjoxNzQ1NDE4ODA0Nzk2fQ==.0cd5611b025ea4454aba8990cbcde6d88dbb912156aca221e3477858f67f1f3b" \
+      -d '{"data" : {"phone": "18468103960", "name": "邓毛毛", "password": "103960"}}' \
+      -v http://elec.blanker.cc/api/login
+      
+ curl -X POST \
+      -H "Content-Type: application/json" \
+      -H "Authorization:Bearer eyJ1c2VySWQiOjEsImV4cCI6MTc0NTUwNTIwNDc5NiwiaWF0IjoxNzQ1NDE4ODA0Nzk2fQ==.0cd5611b025ea4454aba8990cbcde6d88dbb912156aca221e3477858f67f1f3b" \
+      -d '{"data" : {"phone": "13887487478", "name": "周其义", "password": "487478"}}' \
+      -v http://elec.blanker.cc/api/login      
+      
+aa45c19621004872865489ade9400487
+
+let autoSwitchMenuInterval = null; // 添加自动切换菜单的定时器变量
+
+function startAutoSwitchMenu() {
+  if (autoSwitchMenuInterval) {
+    console.log('自动切换菜单已经在运行中');
+    return;
+  }
+  
+  console.log('开始自动切换菜单，间隔1分钟');
+  let currentLiIndex = 0;
+  
+  // 立即执行一次
+  switchToNextMenuItem(currentLiIndex);
+  
+  // 设置定时器，每分钟执行一次
+  autoSwitchMenuInterval = setInterval(() => {
+    const menuElement = document.querySelector('.ant-menu');
+    if (!menuElement) {
+      console.warn('找不到菜单元素');
+      return;
+    }
+    
+    const menuItems = menuElement.querySelectorAll('li');
+    if (!menuItems || menuItems.length === 0) {
+      console.warn('菜单中没有项目');
+      return;
+    }
+    
+    // 更新索引，循环切换
+    currentLiIndex = (currentLiIndex + 1) % menuItems.length;
+    
+    // 切换到下一个菜单项
+    switchToNextMenuItem(currentLiIndex);
+  }, 600000); // 1分钟 = 60000毫秒
+  
+  return () => {
+    if (autoSwitchMenuInterval) {
+      clearInterval(autoSwitchMenuInterval);
+      autoSwitchMenuInterval = null;
+      console.log('停止自动切换菜单');
+    }
+  };
+}
+
+function switchToNextMenuItem(index) {
+  const menuElement = document.querySelector('.ant-menu');
+  if (!menuElement) {
+    console.warn('找不到菜单元素');
+    return;
+  }
+  
+  const menuItems = menuElement.querySelectorAll('li');
+  if (!menuItems || menuItems.length === 0) {
+    console.warn('菜单中没有项目');
+    return;
+  }
+  
+  if (index >= menuItems.length) {
+    console.warn(`索引 ${index} 超出菜单项数量 ${menuItems.length}`);
+    index = 0;
+  }
+  
+  const targetLi = menuItems[index];
+  const linkElement = targetLi.querySelector('a');
+  
+  if (linkElement && linkElement.href) {
+    const href = linkElement.getAttribute('href');
+    console.log(`自动切换到菜单项 ${index}:`, targetLi.textContent.trim(), href);
+    
+    // 使用history API切换地址
+    if (href.startsWith('#')) {
+      history.pushState(null, '', href);
+      window.dispatchEvent(new Event('hashchange'));
+    } else {
+      window.location.href = href;
+    }
+  } else {
+    console.warn(`菜单项 ${index} 没有有效的链接`);
+  }
+}
+
+function stopAutoSwitchMenu() {
+  if (autoSwitchMenuInterval) {
+    clearInterval(autoSwitchMenuInterval);
+    autoSwitchMenuInterval = null;
+    console.log('停止自动切换菜单');
+  }
+}
+
+startAutoSwitchMenu();
+
+
+
+const openSelectDropdown = (select) => {
+    // 找到 Select 的触发元素
+    const trigger = select.querySelector('.ant-select-selection');
+    if (trigger) {
+        // 模拟更完整的用户交互
+        // 1. 模拟鼠标按下事件
+        trigger.dispatchEvent(new MouseEvent('mousedown', {
+            bubbles: true,
+            cancelable: true,
+            view: window
+        }));
+
+        // 2. 模拟点击事件
+        trigger.click();
+
+        // 3. 模拟鼠标抬起事件
+        trigger.dispatchEvent(new MouseEvent('mouseup', {
+            bubbles: true,
+            cancelable: true,
+            view: window
+        }));
+
+        // 4. 尝试直接设置 Select 的展开状态
+        const selectContainer = select.closest('.ant-select');
+        if (selectContainer) {
+            selectContainer.classList.add('ant-select-open');
+        }
+
+        console.log('【navigation-select】已尝试打开下拉菜单');
+        return true;
+    }
+    return false;
+};
+const getSelectOptions = () => {
+    // 下拉菜单选项通常在 body 下的 .ant-select-dropdown 中
+    const dropdown = document.querySelector(
+        '.ant-select-dropdown:not(.ant-select-dropdown-hidden)'
+        // '.ant-select-dropdown'
+    );
+    if (!dropdown) return [];
+
+    // 获取所有选项元素
+    const options = dropdown.querySelectorAll('.ant-select-dropdown-menu-item');
+    return Array.from(options).map(option => ({
+        value: option.getAttribute('title') || option.textContent.trim(),
+        element: option
+    }));
+};
+const openAndSelectOptions = async () => {
+    if (!openSelectDropdown(foundSelect)) {
+        console.warn('【navigation-select】无法打开下拉菜单');
+        return false;
+    }
+    // 等待下拉菜单渲染完成
+    // 使用Promise
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            const options = getSelectOptions();
+            console.log('【navigation-select】获取到选项1:', JSON.stringify(options), options);
+            resolve(options);
+        }, 500);
+    });
+}
+
+const selectOption = (option) => {
+    if (option && option.element) {
+        option.element.click();
+        return true;
+    }
+    return false;
+};
+
+openSelectDropdown(foundSelect)
+const selectOptions = await openAndSelectOptions();
+
+const options = getSelectOptions();
+const currentSelectIndex = 1;
+const targetOption = options[currentSelectIndex];
+
+
+
+√ 获取保存的租户信息，把数据发到后台 // 待测试
+√ 可以在此处获取 tenant变化，并存放在本地，注意第一次初始化 // 待测试
+√ 广东万嘉售电有限公司（91440101MA5D693M4Q）
+√ 把按钮放到popup中 // 待测试 => 放侧边栏
+√ 最后一项，进行下一个日期操作时，回到第二个菜单
+TODO 后台接收数据，处理时增加tenant tenant: "000" // 待测试: 还差需求响应
+√ 后台查询数据，按照tenant过滤
+TODO 租户管理
+TODO 菜单管理
+TODO 租户名称显示
+
+
+<a href="#/console/daily-demand-market/Dashboard?s1745683880304"><span>交易主体信息</span></a>
+
+
+https://www.kmpex.com/sys/home/xhr/framework-auth/login/company?3pcvPmcx=0_jI1TGlqWH4txNOtj37tOvTXSxf.VY8MZB2XXTi28X_WYPgpnK0PXVYFAng8pc9ENMR9OTEBtcqFx6_M5VS50uXuXDFr5dw.lwafkJh3euS_k1UVhJ2Lqa
+
+REQUEST
+{"uniformSocialCreditCode":"91440101MA5D693M4Q","username":"18468103960","password":"dIZQWjYZHuh0YP1C/C0w3kSOmjXXiEzkQJOgu3DHpd2YY8kL4ziXMKD2ZuoBa3Fb5El+Od7WTU+jBlPsm3olH9vkxTz0v4rb9YvIzjYzReKHFW6+xETNntWGZj94soBlDIUukBaJtr23CP2zDYE0y9QLm7BIMbddCh3RfQIW/ThaIoiY8/Da5HTeLADATrLMjijk9rY5klBWolqDdThnjC0aZo/umSO8x5nwFm1R8u8bwI+9Va8PeEyvG81JOZ4tfD82ine5eRwRTYQfuPMOJl7SRICRxvN2PSB7CnFVeCHtJdta3JwxC89RuXghf/1JKO9AMUvd5hFLf0lBrDgbqA==","verifyKey":"c9332527-2efc-48ee-a91a-3ad7e874869c","verifyCode":"JSRN","type":0,"phone":"184****3960","smsVerifyCode":"447365","smsVerifyKey":"2552500e-991a-4468-ab6c-2b348efd286f","certId":""}
+
+https://www.kmpex.com/sys/home/xhr/framework-auth/logged/info?3pcvPmcx=0C_UgpAlqWH4txNOtj37tOvTXSxf.VY8MZB2XXTi28X_WYPgpnK0PXVYFAng8pc9ENMR9OTEBtccNcz3Zl2CNmoW5BrzqFnz84aoKmeqOsYOolWWd1L_tPa
+
+{
+  "msg": "操作成功！",
+  "code": 200,
+  "data": {
+    "marketNum": null,
+    "userName": "<PHTUBFg2wPsG+tmqqG1xYHBUi8ZWmNr8r7MtIDtSFbJdwA7qVRNnBYjoUA2RR4Ur1tuuPhFrdWgQIIrFsF5rHUa9Yx4fQX3Ez889qWOGPuHxEYUQZibU2EGqv1b6l1p1LM95rkvgqDPSp9SPeTh7sACMtuS+8l9VL9gjukvjxxEA2QxrtcaiJltD+dWg6DPtM1Ayc7+9Shi3RvY7uUNJp84K8yGR0Ak6/JHFuin+mXxW3v9ZGL5XiqPZmerBdmvu8An1Z4onMdnQTT5qjCR67WPUaAHyljrFdcfdg7AjmpTuWXcu86sKClpwvTxRoxVWX3Usxhde51/eCiL5UfhErEzMA==THP>",
+    "phone": "<PHTUBFg2wPsG+tmqqG1xYHBUi8ZWmNr8r7MtIDtSFbJdwA7qVRNnBYjoUA2RR4Ur1tuuPhFrdWgQIIrFsF5rHUa9Yx4fQX3Ez889qWOGPuHxEYUQZibU2EGqv1b6l1p1LM95rkvgqDPSp9SPeTh7sACMtuS+8l9VL9gjukvjxxEA2QxrtcaiJltD+dWg6DPtM1Ayc7+9Shi3RvY7uUNJp84K8yGR0Ak6/JHFuin+mXxW3v9ZGL5XiqPZmerBdmvu8An1Z4onMdnQTT5qjCR67WPUaAHyljrFdcfdg7AjmpTuWXcu86sKClpwvTxRoxVWX3Usxhde51/eCiL5UfhErEzMA==THP>",
+    "companyId": 264294,
+    "adminFlag": 0,
+    "auditStatus": true,
+    "companyName": "广东万嘉售电有限公司",
+    "uniformSocialCreditCode": "91440101MA5D693M4Q",
+    "portalRole": 0,
+    "orgId": null,
+    "orgName": null,
+    "orgCode": null,
+    "blocked": false
+  }
+}
+
+https://www.kmpex.com/sys/home/xhr/framework-auth/logged/findAuth?3pcvPmcx=0xEbDJGlqWH4txNOtj37tOvTXSxf.VY8MZB2XXTi28X_WYPgpnK0PXVYFAng8pc9ENMR9OTEBtcrVMeiCWrR42EqHNaob3s_ESvY_kw.hW04_4Zh.PwdAxA
+
+{
+  "msg": "操作成功！",
+  "code": 200,
+  "data": {
+    "code": null,
+    "parentCode": null,
+    "level": 0,
+    "chName": "根节点",
+    "enName": "root",
+    "status": null,
+    "type": null,
+    "uniqueKey": null,
+    "children": [
+      {
+        "code": "2_20230104145536_4783",
+        "parentCode": "",
+        "level": 1,
+        "chName": "企业档案信息",
+        "enName": "companyManage",
+        "status": 1,
+        "type": 1,
+        "uniqueKey": "companyManage",
+        "children": [
+          {
+            "code": "2_20230104145734_5790",
+            "parentCode": "2_20230104145536_4783",
+            "level": 2,
+            "chName": "我的企业信息",
+            "enName": "companyManage/companyInfo",
+            "status": 1,
+            "type": 1,
+            "uniqueKey": "companyManage/companyInfo",
+            "children": [],
+            "frontEndAccessList": "/companyManage/companyInfo",
+            "backEndAccessList": "GET-/company/companyRegisterInfo,GET-/company/companyAuthTab,POST-/company/listAuditRecord,POST-/company/downloadAuthLetter,POST-/company/downloadServiceProtocol,POST-/company/getAuthLetterContent,POST-/company/getServiceProtocolContent,GET-/company/getCompanyAuditStatus,GET-/fileInformation/listCompanyBasicInfo,GET-/companyMarket/listCompanyBasicInfo"
+          },
+          {
+            "code": "2_20230104145834_9735",
+            "parentCode": "2_20230104145536_4783",
+            "level": 2,
+            "chName": "企业人员信息",
+            "enName": "companyManage/companyAccounts",
+            "status": 1,
+            "type": 2,
+            "uniqueKey": "companyManage/companyAccounts",
+            "children": [],
+            "frontEndAccessList": "/companyManage/companyAccounts",
+            "backEndAccessList": "GET-/market/list,POST-/companyPerson/listPerson,POST-/roleInfo/personRoleList,GET-/roleInfo/personRoleDetail,POST-/roleInfo/allRole"
+          },
+          {
+            "code": "2_20230104145912_1594",
+            "parentCode": "2_20230104145536_4783",
+            "level": 2,
+            "chName": "我的市场角色",
+            "enName": "companyManage/companyRole",
+            "status": 1,
+            "type": 2,
+            "uniqueKey": "companyManage/companyRole",
+            "children": [
+              {
+                "code": "2_20230110100421_3061",
+                "parentCode": "2_20230104145912_1594",
+                "level": 3,
+                "chName": "需求侧响应用户",
+                "enName": "companyRole/DRRole",
+                "status": 1,
+                "type": 2,
+                "uniqueKey": "companyRole/DRRole",
+                "children": [],
+                "frontEndAccessList": "/companyManage/companyRole/DRUser",
+                "backEndAccessList": "GET-/demandResponse/listDemandResponseVO,GET-/demandResponse/getDemandResponseInfo,GET-/companyMarket/listCompanyRegAttachment,POST-/companyMarket/listCompanyRecordChange,GET-/demandResponse/listDemandAuditRecordVO,GET-/demandResponse/selectDemandResponseVO,POST-/demandResponse/import,GET-/demandResponse/checkIfImport,POST-/demandResponse/listDemandResponseVO"
+              },
+              {
+                "code": "2_20240419215926_8750",
+                "parentCode": "2_20230104145912_1594",
+                "level": 3,
+                "chName": "查看企业注册信息变更历史记录详情",
+                "enName": "companyRoles/viewRegisterInfoChangeRecordDetails",
+                "status": 1,
+                "type": 3,
+                "uniqueKey": "companyRoles/viewRegisterInfoChangeRecordDetails",
+                "children": [],
+                "frontEndAccessList": "/companyManage/companyRole/companyInfoChangeDetail",
+                "backEndAccessList": "GET-/companyMarket/{companyBakId}/companyRegisterInfo,GET-/companyMarket/{companyBakId}/companyAuthTab"
+              },
+              {
+                "code": "2_20240419220047_4181",
+                "parentCode": "2_20230104145912_1594",
+                "level": 3,
+                "chName": "查看管理员变更历史记录详情",
+                "enName": "yMarket/{companyBakId}/companyAuthT",
+                "status": 1,
+                "type": 3,
+                "uniqueKey": "yMarket/{companyBakId}/companyAuthT",
+                "children": [],
+                "frontEndAccessList": "/companyManage/companyRole/companyAdminChangeDetail",
+                "backEndAccessList": "GET-/companyMarket/{personBakId}/info"
+              },
+              {
+                "code": "2_20240419220225_2212",
+                "parentCode": "2_20230104145912_1594",
+                "level": 3,
+                "chName": "查看售电公司变更历史记录详情",
+                "enName": "companyRoles/viewSalesComChangeRecordDetails",
+                "status": 1,
+                "type": 3,
+                "uniqueKey": "companyRoles/viewSalesComChangeRecordDetails",
+                "children": [],
+                "frontEndAccessList": "/companyManage/companyRole/sellerRoleChangeDetail",
+                "backEndAccessList": "GET-/saleCompanyInfoChange/getElectricitySupplierBasicInfos,GET-/saleCompanyInfoChange/listAttachments,GET-/saleCompanyInfoChange/getSupplementInfo"
+              }
+            ],
+            "frontEndAccessList": "/companyManage/companyRole",
+            "backEndAccessList": "GET-/companyMarket/listCompanyBasicInfo"
+          }
+        ],
+        "frontEndAccessList": "/companyManage",
+        "backEndAccessList": ""
+      },
+      {
+        "code": "2_20231127092354_5806",
+        "parentCode": "",
+        "level": 1,
+        "chName": "数字证书管理",
+        "enName": "caManage",
+        "status": 1,
+        "type": 1,
+        "uniqueKey": "caManage",
+        "children": [
+          {
+            "code": "2_20231127092752_3094",
+            "parentCode": "2_20231127092354_5806",
+            "level": 2,
+            "chName": "数字证书查询",
+            "enName": "caManage/list",
+            "status": 1,
+            "type": 2,
+            "uniqueKey": "caManage/list",
+            "children": [],
+            "frontEndAccessList": "/caManage/list",
+            "backEndAccessList": "POST-/digitalCertificate/listCertificate,POST-/digitalCertificate/listCertificateLogVO"
+          },
+          {
+            "code": "2_20231127092840_5149",
+            "parentCode": "2_20231127092354_5806",
+            "level": 2,
+            "chName": "数字证书绑定",
+            "enName": "caManage/bindList",
+            "status": 1,
+            "type": 2,
+            "uniqueKey": "caManage/bindList",
+            "children": [],
+            "frontEndAccessList": "/caManage/bindList",
+            "backEndAccessList": "POST-/digitalCertificate/listCertificatePerson"
+          }
+        ],
+        "frontEndAccessList": "/caManage",
+        "backEndAccessList": ""
+      },
+      {
+        "code": "2_20240419220409_8440",
+        "parentCode": "",
+        "level": 1,
+        "chName": "企业门户",
+        "enName": "companyPortal",
+        "status": 1,
+        "type": 1,
+        "uniqueKey": "companyPortal",
+        "children": [
+          {
+            "code": "2_20240419220611_2870",
+            "parentCode": "2_20240419220409_8440",
+            "level": 2,
+            "chName": "一级门户",
+            "enName": "companyPortal/welcome",
+            "status": 1,
+            "type": 2,
+            "uniqueKey": "companyPortal/welcome",
+            "children": [],
+            "frontEndAccessList": "/portal-welcome",
+            "backEndAccessList": "GET-/popUpNotification/list,GET-/popUpNotification/getChooseMarketType,GET-/message/getMap,POST-/popUpNotification/read,POST-/popUpNotification/confirm,POST-/popUpNotification/sync,GET-/popUpNotification/getChooseMarketType"
+          },
+          {
+            "code": "2_20240419220650_5795",
+            "parentCode": "2_20240419220409_8440",
+            "level": 2,
+            "chName": "二级门户",
+            "enName": "companyPortal/subPortal",
+            "status": 1,
+            "type": 1,
+            "uniqueKey": "companyPortal/subPortal",
+            "children": [
+              {
+                "code": "2_20240419221033_9506",
+                "parentCode": "2_20240419220650_5795",
+                "level": 3,
+                "chName": "售电公司业务提醒",
+                "enName": "companyPortal/subPortal/sellerMessage",
+                "status": 1,
+                "type": 2,
+                "uniqueKey": "companyPortal/subPortal/sellerMessage",
+                "children": [],
+                "frontEndAccessList": "/my-portal/seller-message",
+                "backEndAccessList": "POST-/popUpNotification/listPopUpNotification,POST-/popUpNotification/listRetailPopUpNotification,POST-/popUpNotification/batchRead,POST-/popUpNotification/exportRetailPopUpNotification"
+              },
+              {
+                "code": "2_20240419221207_6517",
+                "parentCode": "2_20240419220650_5795",
+                "level": 3,
+                "chName": "消息通知",
+                "enName": "companyPortal/subPortal/myMessage",
+                "status": 1,
+                "type": 2,
+                "uniqueKey": "companyPortal/subPortal/myMessage",
+                "children": [],
+                "frontEndAccessList": "/my-portal/my-message",
+                "backEndAccessList": "GET-/evaluation/getDetail,POST-/evaluation/save"
+              },
+              {
+                "code": "2_20240419221345_7975",
+                "parentCode": "2_20240419220650_5795",
+                "level": 3,
+                "chName": "我要留言",
+                "enName": "companyPortal/subPortal/onlineMessage",
+                "status": 1,
+                "type": 2,
+                "uniqueKey": "companyPortal/subPortal/onlineMessage",
+                "children": [],
+                "frontEndAccessList": "/my-portal/online-messages",
+                "backEndAccessList": "POST-/guestBook/list,POST-/guestBook/update,POST-/guestBook/add"
+              },
+              {
+                "code": "2_20240419220722_7440",
+                "parentCode": "2_20240419220650_5795",
+                "level": 3,
+                "chName": "市场角色信息",
+                "enName": "companyPortal/subPortal/roleInfo",
+                "status": 1,
+                "type": 2,
+                "uniqueKey": "companyPortal/subPortal/roleInfo",
+                "children": [],
+                "frontEndAccessList": "/my-portal",
+                "backEndAccessList": ""
+              },
+              {
+                "code": "2_20240419220857_8768",
+                "parentCode": "2_20240419220650_5795",
+                "level": 3,
+                "chName": "企业信息",
+                "enName": "companyPortal/subPortal/companyInfo",
+                "status": 1,
+                "type": 2,
+                "uniqueKey": "companyPortal/subPortal/companyInfo",
+                "children": [],
+                "frontEndAccessList": "/my-portal/company-info",
+                "backEndAccessList": "GET-/company/companyRegisterInfo,GET-/market/listEntity,POST-/companyPerson/listPerson,POST-/roleInfo/personRoleList"
+              }
+            ],
+            "frontEndAccessList": "/my-portal",
+            "backEndAccessList": ""
+          }
+        ],
+        "frontEndAccessList": "/portal",
+        "backEndAccessList": "GET-/company/getCompanyAuditStatus,GET-/companyMarket/listCompanyBasicInfo,GET-/fileInformation/listCompanyBasicInfo"
+      }
+    ],
+    "frontEndAccessList": null,
+    "backEndAccessList": null
+  }
+}
+
+https://www.kmpex.com/sys/home/xhr/company-management/companyMarket/listCompanyBasicInfo?3pcvPmcx=0Fbu.FalqWH4txNOtj37tOvTXSxf.VY8MZB2XXTi28X_WYPgpnK0PXVYFAng8pc9ENMR9OTEBtcrxKfkBFJygLnEhCYikuR.ox87cdYv4XM6ukjZMe5sC3G
+{
+  "msg": "操作成功！",
+  "code": 200,
+  "data": [
+    {
+      "companyBasicInfoId": 195989,
+      "companyId": 264294,
+      "companyName": "广东万嘉售电有限公司",
+      "name": null,
+      "legalPersonName": "郝少波",
+      "uniformSocialCreditCode": "91440101MA5D693M4Q",
+      "meId": 11,
+      "meName": "负荷聚合商",
+      "totalAssets": null,
+      "companyOrgType": null,
+      "regStatus": null,
+      "industry": null,
+      "regLocation": null,
+      "begEffectiveDate": null,
+      "endEffectiveDate": null,
+      "regInstitute": null,
+      "microFlag": null,
+      "enterpriseEconomicNature": null,
+      "businessScope": null,
+      "companyEmail": "1908215304@qq.com",
+      "verificationDate": null,
+      "establishDate": null,
+      "staffNumRange": null,
+      "businessLicenseId": null,
+      "businessLicenseUrl": null,
+      "publicityStatus": null,
+      "publicityId": null,
+      "area": null,
+      "lineLoss": null,
+      "confirmStatus": 0,
+      "createTime": "2023-09-18",
+      "electricitySupplierRecordId": null,
+      "hasAssetFlag": 1,
+      "buQualificationValue": null,
+      "companyBusinessVO": null,
+      "tradingCenterAuditId": 110233,
+      "tradingCenterAuditStatus": 3,
+      "tradingCenterAuditChildId": null,
+      "tradingCenterAuditChildStatus": null,
+      "childAuditReason": null,
+      "auditModule": null,
+      "marketName": "需求侧响应市场",
+      "turnOnTime": "2023-09-21 16:16:18",
+      "disableType": null,
+      "marketStatusDesc": null,
+      "loadAggAuditStatus": 3,
+      "demandResponseAuditStatus": null
+    }
+  ]
+}
+
+https://www.kmpex.com/sys/home/xhr/sso-portal/portal/companyList?3pcvPmcx=0qIMY6qlqWH4txNOtj37tOvTXSxf.VY8MZB2XXTi28X_WYPgpnK0PXVYFAng8pc9ENMR9OTEBtcqP5V7v4qhK9mirif12DnDGt1H8oNGPHmfCXFuKMJeXqq
+{
+  "msg": "操作成功！",
+  "code": 200,
+  "data": [
+    {
+      "companyVO": {
+        "companyId": 264294,
+        "domesticStatus": 1,
+        "businessLicenseFileId": 1907226,
+        "businessLicenseType": 0,
+        "businessLicenseUrl": null,
+        "businessLicenseKey": null,
+        "companyName": "广东万嘉售电有限公司",
+        "legalPersonName": "郝少波",
+        "uniformSocialCreditCode": "91440101MA5D693M4Q",
+        "effectiveStartDate": null,
+        "effectiveEndDate": "2999-12-31",
+        "companyEmail": "1908215304@qq.com",
+        "createTime": "2022-04-28 11:26:10",
+        "tradingCenterAuditStatus": 3,
+        "auditFailureTipMsg": null,
+        "status": 1,
+        "economicNature": null,
+        "businessScale": null,
+        "establishDate": null,
+        "approvedTime": null,
+        "regStatus": null,
+        "industry": null,
+        "businessScope": null,
+        "marketStatus": "1",
+        "assistedUserNo": null,
+        "salesCompanyName": null,
+        "salesCreditCode": null,
+        "assistedIdentityName": null,
+        "assistedUserPhone": null,
+        "electronicFlag": 0,
+        "attachmentFileId": null,
+        "attachmentUrl": null,
+        "source": null,
+        "loggedInFlag": 1,
+        "highEnergyFlag": null,
+        "authMode": 0
+      },
+      "electricityInfoVOList": null,
+      "plantInfoVOList": null,
+      "plantInfoFMVOList": null,
+      "energyStorageInfoVOList": null,
+      "salesUserNo": null,
+      "demandUserNoInfoList": null,
+      "loadAggUserNo": "33530154",
+      "adminFlag": 0
+    }
+  ]
+}
+
+https://www.kmpex.com/sys/home/xhr/company-management/companyMarket/listCompanyBasicInfo?3pcvPmcx=0H2aoeqlqWH4txNOtj37tOvTXSxf.VY8MZB2XXTi28X_WYPgpnK0PXVYFAng8pc9ENMR9OTEBtcqNUVZKj17D6p2S96cPvJzuFuUk6uA1cpJ.ygkDL8MqkG
+{
+  "msg": "操作成功！",
+  "code": 200,
+  "data": [
+    {
+      "companyBasicInfoId": 195989,
+      "companyId": 264294,
+      "companyName": "广东万嘉售电有限公司",
+      "name": null,
+      "legalPersonName": "郝少波",
+      "uniformSocialCreditCode": "91440101MA5D693M4Q",
+      "meId": 11,
+      "meName": "负荷聚合商",
+      "totalAssets": null,
+      "companyOrgType": null,
+      "regStatus": null,
+      "industry": null,
+      "regLocation": null,
+      "begEffectiveDate": null,
+      "endEffectiveDate": null,
+      "regInstitute": null,
+      "microFlag": null,
+      "enterpriseEconomicNature": null,
+      "businessScope": null,
+      "companyEmail": "1908215304@qq.com",
+      "verificationDate": null,
+      "establishDate": null,
+      "staffNumRange": null,
+      "businessLicenseId": null,
+      "businessLicenseUrl": null,
+      "publicityStatus": null,
+      "publicityId": null,
+      "area": null,
+      "lineLoss": null,
+      "confirmStatus": 0,
+      "createTime": "2023-09-18",
+      "electricitySupplierRecordId": null,
+      "hasAssetFlag": 1,
+      "buQualificationValue": null,
+      "companyBusinessVO": null,
+      "tradingCenterAuditId": 110233,
+      "tradingCenterAuditStatus": 3,
+      "tradingCenterAuditChildId": null,
+      "tradingCenterAuditChildStatus": null,
+      "childAuditReason": null,
+      "auditModule": null,
+      "marketName": "需求侧响应市场",
+      "turnOnTime": "2023-09-21 16:16:18",
+      "disableType": null,
+      "marketStatusDesc": null,
+      "loadAggAuditStatus": 3,
+      "demandResponseAuditStatus": null
+    }
+  ]
+}
+
+https://www.kmpex.com/sys/home/xhr/framework-auth/logged/info?3pcvPmcx=0zMl2VAlqWH4txNOtj37tOvTXSxf.VY8MZB2XXTi28X_WYPgpnK0PXVYFAng8pc9ENMR9OTEBtccVx6P2NZP4J34sfzGqfQ0f2VX9BH7DTqlx.ygf32F_za
+{
+  "msg": "操作成功！",
+  "code": 200,
+  "data": {
+    "marketNum": "33530154",
+    "userName": "<PHTDucdWlkUQVZRop8QYBcQD3GXI7k2R5qYhsHgs8UFOE1rKiRAfYGBGo1IV/sjAd6HbOvcqabURgHRS73Z3wb+hrnNVqcd+kj0XJexbbgRTz16NpFTFal9Icz1EKv9/xYoHqUcaYw/+GQEqcwNEPDHAku5nKaIP3Bu2eAW1Nwe7SW3X949Tzz9BmQxgFx7YsyUW+7gExlaJK7rNuO8K4Yz7X1V+VOXgxpUzJTOMvUDsoIOWY0NLGIuPMDE3W15RGFuARqQNmVi8gHEbi3jSdiCCt/Hg4d9n/NY34sGUNs5ZVyn6H0YK50KAH6l67wC4QsXc62bms+Sce5Yp+ZhcK4eiQ==THP>",
+    "phone": "<PHTDucdWlkUQVZRop8QYBcQD3GXI7k2R5qYhsHgs8UFOE1rKiRAfYGBGo1IV/sjAd6HbOvcqabURgHRS73Z3wb+hrnNVqcd+kj0XJexbbgRTz16NpFTFal9Icz1EKv9/xYoHqUcaYw/+GQEqcwNEPDHAku5nKaIP3Bu2eAW1Nwe7SW3X949Tzz9BmQxgFx7YsyUW+7gExlaJK7rNuO8K4Yz7X1V+VOXgxpUzJTOMvUDsoIOWY0NLGIuPMDE3W15RGFuARqQNmVi8gHEbi3jSdiCCt/Hg4d9n/NY34sGUNs5ZVyn6H0YK50KAH6l67wC4QsXc62bms+Sce5Yp+ZhcK4eiQ==THP>",
+    "companyId": 264294,
+    "adminFlag": 0,
+    "auditStatus": true,
+    "companyName": "广东万嘉售电有限公司",
+    "uniformSocialCreditCode": "91440101MA5D693M4Q",
+    "portalRole": 11,
+    "orgId": null,
+    "orgName": null,
+    "orgCode": null,
+    "blocked": false
+  }
+}
+
+https://www.kmpex.com/sys/dr/per-service/menuResource/getMenuParamsList?3pcvPmcx=02_zgCalqWWt_8ZlHGS9SQ7pOU9RCpRrfMTz1PeLmjDGSd8SVyDLtWBXe226JCRGWW3X.TIpQGPqQR_Mepc6Lf36wmQ4twT8wb4qLy2zJQrFZ9dsAQkAeLq
+{
+  "code": "200",
+  "data": {
+    "frontend-service": [
+      {
+        "description": "/console/daily-demand-market/Dashboard",
+        "id": "f28cfbace63e41ccbf0a57d2727928f6",
+        "name": "交易主体信息",
+        "params": "{}",
+        "perId": "a12a91a2361a433883086370b6c99dec",
+        "route": "/console/daily-demand-market/Dashboard",
+        "seq": 0,
+        "serviceId": "frontend-service",
+        "type": "0"
+      },
+      {
+        "description": "/console/daily-demand-market/la_list",
+        "id": "1ebf72598aff4026ab6f823817e6ddfd",
+        "name": "负荷聚合商名单",
+        "params": "{}",
+        "perId": "78e674fb1a964ab689b2db4937b5000a",
+        "route": "/console/daily-demand-market/la_list",
+        "seq": 1,
+        "serviceId": "frontend-service",
+        "type": "0"
+      },
+      {
+        "description": "/console/daily-demand-market/PreTransaction",
+        "id": "9e511ff0f9d346289e8201af2c9b9327",
+        "name": "交易前需求发布",
+        "params": "{}",
+        "perId": "8326802add7c4d1da1fab6ab89a87488",
+        "route": "/console/daily-demand-market/PreTransaction",
+        "seq": 2,
+        "serviceId": "frontend-service",
+        "type": "0"
+      },
+      {
+        "description": "/console/daily-demand-market/ResponseApply-noca",
+        "id": "e0fd6a93ca0749d08bba5ca280e672f0",
+        "name": "需求响应申报",
+        "params": "{}",
+        "perId": "5989b4f25d104764b07bd42f992ab5c9",
+        "route": "/console/daily-demand-market/ResponseApply-noca",
+        "seq": 3,
+        "serviceId": "frontend-service",
+        "type": "0"
+      },
+      {
+        "description": "/console/daily-demand-market/ApplyAndClear",
+        "id": "063a2864eba04bd990b93fe87f0dd5dc",
+        "name": "申报及出清查询",
+        "params": "{}",
+        "perId": "3415b46db4e9444ab1b59f61d30f92a0",
+        "route": "/console/daily-demand-market/ApplyAndClear",
+        "seq": 4,
+        "serviceId": "frontend-service",
+        "type": "0"
+      },
+      {
+        "description": "/console/daily-demand-market/DealResultReport",
+        "id": "e49e27ed347b44dd97ddb636668a412f",
+        "name": "成交结果通知书",
+        "params": "{}",
+        "perId": "b08939b95ca34ccd80b8f8144bb43103",
+        "route": "/console/daily-demand-market/DealResultReport",
+        "seq": 5,
+        "serviceId": "frontend-service",
+        "type": "0"
+      },
+      {
+        "description": "/console/daily-demand-market/InfactInfo",
+        "id": "274c15ebc0c14ad88c02c47779d78a5f",
+        "name": "实际信息查询",
+        "params": "{}",
+        "perId": "41e27038c21f469a99a12da7f3ab1a0f",
+        "route": "/console/daily-demand-market/InfactInfo",
+        "seq": 6,
+        "serviceId": "frontend-service",
+        "type": "0"
+      },
+      {
+        "description": "/console/daily-demand-market/SettlementInfo",
+        "id": "7f43c254b1264350ab2f9cf627a2b33a",
+        "name": "日清算明细",
+        "params": "{}",
+        "perId": "d26c2a3c6a0d4586b4e41d01cfb57049",
+        "route": "/console/daily-demand-market/SettlementInfo",
+        "seq": 7,
+        "serviceId": "frontend-service",
+        "type": "0"
+      },
+      {
+        "description": "/console/daily-demand-market/JHS_DailyClearInfo",
+        "id": "45017dc57093437b8a356c2bc88c10c3",
+        "name": "聚合商日清算明细",
+        "params": "{\"BU_ONLY\":\"true\"}",
+        "perId": "55cb4772032e44bc849e83c925ffce3b",
+        "route": "/console/daily-demand-market/JHS_DailyClearInfo",
+        "seq": 8,
+        "serviceId": "frontend-service",
+        "type": "0"
+      },
+      {
+        "description": "/console/daily-demand-market/SettlementSum",
+        "id": "8d23c01aa1204aa4b337ba3dc1e405fd",
+        "name": "月结算详情",
+        "params": "{}",
+        "perId": "a887122f6a164832965634ee38373855",
+        "route": "/console/daily-demand-market/SettlementSum",
+        "seq": 10,
+        "serviceId": "frontend-service",
+        "type": "0"
+      },
+      {
+        "description": "/console/daily-demand-market/JHS_MonthlyClearInfo",
+        "id": "918b6664155a4e3693e3dc6dca5eb274",
+        "name": "聚合商月结算详情",
+        "params": "{\"BU_ONLY\":\"true\"}",
+        "perId": "1635778167c24cf68839fa65c8abd152",
+        "route": "/console/daily-demand-market/JHS_MonthlyClearInfo",
+        "seq": 11,
+        "serviceId": "frontend-service",
+        "type": "0"
+      },
+      {
+        "description": "/console/daily-demand-market/SharePrice",
+        "id": "9b6972c759e94d31a29bced071e03a72",
+        "name": "分摊价格公示",
+        "params": "{}",
+        "perId": "f09bd696a7584ffcbe68eb3bd2d61de6",
+        "route": "/console/daily-demand-market/SharePrice",
+        "seq": 12,
+        "serviceId": "frontend-service",
+        "type": "0"
+      },
+      {
+        "description": "/console/daily-demand-market/MonthlyBill",
+        "id": "8eaab9769cec4dde9aa9a94ccd4300d0",
+        "name": "月度账单",
+        "params": "{}",
+        "perId": "535ceefe116342a6ac420e923f8bf570",
+        "route": "/console/daily-demand-market/MonthlyBill",
+        "seq": 13,
+        "serviceId": "frontend-service",
+        "type": "0"
+      },
+      {
+        "description": "/console/daily-demand-market/ResponseAssessment",
+        "id": "0156981993e2494ebf25de59859ad8ca",
+        "name": "差错清算详情",
+        "params": "{}",
+        "perId": "601ab25b60a04ac191645c7b272fa95d",
+        "route": "/console/daily-demand-market/ResponseAssessment",
+        "seq": 14,
+        "serviceId": "frontend-service",
+        "type": "0"
+      },
+      {
+        "description": "/console/daily-demand-market/AgencyReleteChange-noca",
+        "id": "6f67b0e1482d460abaffa5b0f64f943d",
+        "name": "2025代理关系变更",
+        "params": "{}",
+        "perId": "306a348b2dbb4631bba9c4f6cec2273e",
+        "route": "/console/daily-demand-market/AgencyReleteChange-noca",
+        "seq": 15,
+        "serviceId": "frontend-service",
+        "type": "0"
+      },
+      {
+        "description": "/console/daily-demand-market/AgencyReleteChange-noca2022",
+        "id": "ea334bbf50f74073984fa8655eea6f3f",
+        "name": "代理关系变更2022",
+        "params": "{}",
+        "perId": "d5e0b3e7f04249909ea52fd2f035d943",
+        "route": "/console/daily-demand-market/AgencyReleteChange-noca2022",
+        "seq": 16,
+        "serviceId": "frontend-service",
+        "type": "0"
+      },
+      {
+        "description": "/console/daily-demand-market/ResultsPublicity",
+        "id": "c98562db39024165bf7342edc78f0d1b",
+        "name": "响应评估结果公示",
+        "params": "{}",
+        "perId": "5a04ffe243984a40ba8d11aed4b51d48",
+        "route": "/console/daily-demand-market/ResultsPublicity",
+        "seq": 17,
+        "serviceId": "frontend-service",
+        "type": "0"
+      }
+    ]
+  },
+  "msg": "OK",
+  "succ": true,
+  "timestamp": 1745677366437
+}
+
+https://www.kmpex.com/sys/dr/resmktapply-service/user/getCurrentUserInfo/access?3pcvPmcx=0xoERxalqWWt_8ZlHGS9SQ7pOU9RCpRrfMTz1PeLmjDGSd8SVyDLtWBXe226JCRGWW3X.TIpQGPq2n9E_xvMOBFgIyfIX2HPH3Opswk27DZwMwDwD2HfvXG
+{
+  "code": "200",
+  "data": {
+    "grandparentname": "负荷聚合商",
+    "orgName": "广东万嘉售电有限公司",
+    "phone": "184*****3960",
+    "name": "184*****3960",
+    "position": "邓毛毛",
+    "type": 0,
+    "enabled": 0,
+    "orgId": "91440101MA5D693M4Q"
+  },
+  "msg": "查询交易主体信息-自身信息",
+  "succ": true,
+  "timestamp": 1745677366575
+}
+
+https://www.kmpex.com/sys/dr/resmktapply-service/index/getLaInfo/access?3pcvPmcx=0nYdezAlqWWt_8ZlHGS9SQ7pOU9RCpRrfMTz1PeLmjDGSd8SVyDLtWBXe226JCRGWW3X.TIpQGPkp3WTaTJh92_BvkSamLxW9hil6kVBpuDTvm3htobrI_a
+{
+  "code": "200",
+  "data": {
+    "creditCode": "91440101MA5D693M4Q",
+    "id": "33530154",
+    "name": "广东万嘉售电有限公司"
+  },
+  "msg": "查询交易主体信息-负荷聚合商基础信息查询",
+  "succ": true,
+  "timestamp": 1745677366775
+}
+
+https://www.kmpex.com/sys/dr/resmktapply-service/index/getAgentRelation/page/access?3pcvPmcx=0ZeLK_alqWWt_8ZlHGS9SQ7pOU9RCpRrfMTz1PeLmjDGSd8SVyDLtWBXe226JCRGWW3X.TIpQGPrpexkRLJLkbyLdIVFwWNAaQUFiZepydj6pQ9CIWWs2Aq
+{
+  "code": "200",
+  "data": {
+    "rows": [
+      {
+        "begintime": 1737595361000,
+        "buType": "被代理用户",
+        "capAbility": "13750",
+        "creditCode": "9153252574146294XH",
+        "gainSharing": 20,
+        "id": "0503001201274022",
+        "isEa": "N",
+        "isQa": "Y",
+        "locateArea": "050300",
+        "marketState": "运行",
+        "maxRespLoad": 13000,
+        "maxResponcePow": "13000",
+        "maxValleyLoad": 3000,
+        "minRespLoad": 0,
+        "minResponcePow": "0",
+        "minValleyLoad": 0,
+        "name": "石屏县瑞龙电力实业有限责任公司",
+        "resType": "工业负荷",
+        "voltLevel": "交流35kV",
+        "voltagekV": 0
+      },
+      {
+        "begintime": 1737597669000,
+        "buType": "被代理用户",
+        "capAbility": "2130",
+        "creditCode": "91530381MA6P5A3L66",
+        "gainSharing": 40,
+        "id": "0502001400582181",
+        "isEa": "N",
+        "isQa": "Y",
+        "locateArea": "050200",
+        "marketState": "运行",
+        "maxRespLoad": 2130,
+        "maxResponcePow": "2130",
+        "maxValleyLoad": 2130,
+        "minRespLoad": 0,
+        "minResponcePow": "0",
+        "minValleyLoad": 0,
+        "name": "宣威市进鑫商贸有限公司板桥双沟采石厂",
+        "resType": "工业负荷",
+        "voltLevel": "交流10kV",
+        "voltagekV": 0
+      },
+      {
+        "begintime": 1737598908000,
+        "buType": "被代理用户",
+        "capAbility": "400",
+        "creditCode": "91530112309565835C",
+        "gainSharing": 40,
+        "id": "0501001713380686",
+        "isEa": "N",
+        "isQa": "Y",
+        "locateArea": "050100",
+        "marketState": "运行",
+        "maxRespLoad": 400,
+        "maxResponcePow": "400",
+        "maxValleyLoad": 400,
+        "minRespLoad": 0,
+        "minResponcePow": "0",
+        "minValleyLoad": 0,
+        "name": "昆明帅雄光学仪器有限公司",
+        "resType": "工业负荷",
+        "voltLevel": "交流10kV",
+        "voltagekV": 0
+      },
+      {
+        "begintime": 1737599601000,
+        "buType": "被代理用户",
+        "capAbility": "2380",
+        "creditCode": "915325252180106075",
+        "gainSharing": 50,
+        "id": "0503001200161877",
+        "isEa": "N",
+        "isQa": "Y",
+        "locateArea": "050300",
+        "marketState": "运行",
+        "maxRespLoad": 2380,
+        "maxResponcePow": "2380",
+        "maxValleyLoad": 2000,
+        "minRespLoad": 0,
+        "minResponcePow": "0",
+        "minValleyLoad": 0,
+        "name": "石屏县恒誉实业有限公司",
+        "resType": "工业负荷",
+        "voltLevel": "交流10kV",
+        "voltagekV": 0
+      },
+      {
+        "begintime": 1737600786000,
+        "buType": "被代理用户",
+        "capAbility": "16050",
+        "creditCode": "91530425697975384N",
+        "gainSharing": 100,
+        "id": "0504001901336465",
+        "isEa": "N",
+        "isQa": "Y",
+        "locateArea": "050400",
+        "marketState": "运行",
+        "maxRespLoad": 16050,
+        "maxResponcePow": "16050",
+        "maxValleyLoad": 14000,
+        "minRespLoad": 0,
+        "minResponcePow": "0",
+        "minValleyLoad": 0,
+        "name": "易门嘉禾瓷业有限公司",
+        "resType": "工业负荷",
+        "voltLevel": "交流35kV",
+        "voltagekV": 0
+      },
+      {
+        "begintime": 1737601067000,
+        "buType": "被代理用户",
+        "capAbility": "1000",
+        "creditCode": "91530381346659945Q",
+        "gainSharing": 50,
+        "id": "0502053083813879",
+        "isEa": "N",
+        "isQa": "Y",
+        "locateArea": "050200",
+        "marketState": "运行",
+        "maxRespLoad": 1000,
+        "maxResponcePow": "1000",
+        "maxValleyLoad": 1000,
+        "minRespLoad": 0,
+        "minResponcePow": "0",
+        "minValleyLoad": 0,
+        "name": "宣威市鑫都建材有限责任公司",
+        "resType": "工业负荷",
+        "voltLevel": "交流10kV",
+        "voltagekV": 0
+      },
+      {
+        "begintime": 1737601794000,
+        "buType": "被代理用户",
+        "capAbility": "500",
+        "creditCode": "91530381668287013D",
+        "gainSharing": 40,
+        "id": "0502001400468107",
+        "isEa": "N",
+        "isQa": "Y",
+        "locateArea": "050200",
+        "marketState": "运行",
+        "maxRespLoad": 500,
+        "maxResponcePow": "500",
+        "maxValleyLoad": 500,
+        "minRespLoad": 0,
+        "minResponcePow": "0",
+        "minValleyLoad": 0,
+        "name": "云南四季康食品有限公司",
+        "resType": "工业负荷",
+        "voltLevel": "交流10kV",
+        "voltagekV": 0
+      },
+      {
+        "begintime": 1737602183000,
+        "buType": "被代理用户",
+        "capAbility": "2000",
+        "creditCode": "9153252477858246XC",
+        "gainSharing": 20,
+        "id": "0503001202363294",
+        "isEa": "N",
+        "isQa": "Y",
+        "locateArea": "050300",
+        "marketState": "运行",
+        "maxRespLoad": 1100,
+        "maxResponcePow": "1100",
+        "maxValleyLoad": 0,
+        "minRespLoad": 200,
+        "minResponcePow": "200",
+        "minValleyLoad": 0,
+        "name": "建水县千原木业有限公司",
+        "resType": "工业负荷",
+        "voltLevel": "交流35kV",
+        "voltagekV": 0
+      },
+      {
+        "begintime": 1737602923000,
+        "buType": "被代理用户",
+        "capAbility": "1000",
+        "creditCode": "91530381731228471N",
+        "gainSharing": 40,
+        "id": "0502001400975936",
+        "isEa": "N",
+        "isQa": "Y",
+        "locateArea": "050200",
+        "marketState": "运行",
+        "maxRespLoad": 1200,
+        "maxResponcePow": "1200",
+        "maxValleyLoad": 0,
+        "minRespLoad": 800,
+        "minResponcePow": "800",
+        "minValleyLoad": 0,
+        "name": "宣威市瑞锌金属新材料有限公司",
+        "resType": "工业负荷",
+        "voltLevel": "交流10kV",
+        "voltagekV": 0
+      },
+      {
+        "begintime": 1737603148000,
+        "buType": "被代理用户",
+        "capAbility": "125",
+        "creditCode": "91530381MA6N8L3338",
+        "gainSharing": 40,
+        "id": "0502001401643352",
+        "isEa": "N",
+        "isQa": "Y",
+        "locateArea": "050200",
+        "marketState": "运行",
+        "maxRespLoad": 125,
+        "maxResponcePow": "125",
+        "maxValleyLoad": 125,
+        "minRespLoad": 0,
+        "minResponcePow": "0",
+        "minValleyLoad": 0,
+        "name": "宣威市虹福新型建材有限责任公司",
+        "resType": "工业负荷",
+        "voltLevel": "交流10kV",
+        "voltagekV": 0
+      },
+      {
+        "begintime": 1737603440000,
+        "buType": "被代理用户",
+        "capAbility": "315",
+        "creditCode": "91530381MACT2MY02K",
+        "gainSharing": 40,
+        "id": "0502001400687144",
+        "isEa": "N",
+        "isQa": "Y",
+        "locateArea": "050200",
+        "marketState": "运行",
+        "maxRespLoad": 815,
+        "maxResponcePow": "815",
+        "maxValleyLoad": 815,
+        "minRespLoad": 0,
+        "minResponcePow": "0",
+        "minValleyLoad": 0,
+        "name": "宣威长宏实业有限公司",
+        "resType": "工业负荷",
+        "voltLevel": "交流10kV",
+        "voltagekV": 0
+      },
+      {
+        "begintime": 1737603827000,
+        "buType": "被代理用户",
+        "capAbility": "6380",
+        "creditCode": "91530381054681833W",
+        "gainSharing": 100,
+        "id": "0502001402734869",
+        "isEa": "N",
+        "isQa": "Y",
+        "locateArea": "050200",
+        "marketState": "运行",
+        "maxRespLoad": 2000,
+        "maxResponcePow": "2000",
+        "maxValleyLoad": 0,
+        "minRespLoad": 0,
+        "minResponcePow": "0",
+        "minValleyLoad": 0,
+        "name": "宣威市皂卫矿业有限责任公司",
+        "resType": "工业负荷",
+        "voltLevel": "交流35kV",
+        "voltagekV": 0
+      }
+    ],
+    "total": 54
+  },
+  "msg": "查询交易主体信息-代理关系",
+  "succ": true,
+  "timestamp": 1745677366810
+}

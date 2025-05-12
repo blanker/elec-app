@@ -14,6 +14,7 @@ import { saveCustomer } from './customer.js';
 import { saveSettlements, countByMonth, fetchByMonth } from './settlement.js';
 import { newUser, login, authMiddleware } from './user.js';
 import { getTenant } from './tenant.js';
+import {saveInfoPublictiList, saveInfoPublictiListList} from './info-publicity.js'
 
 const { preflight, corsify } = cors({
   origin: '*',
@@ -82,6 +83,9 @@ router.post('/api/table-data/bu-response-cap', saveResponses);
 router.post('/api/private/responses', statResponses);
 router.post('/api/private/stat-response-group-by-rundate', statResponseGroupByRundate);
 router.post('/api/private/get-responses-by-rundate', getResponsesByRundate);
+
+router.post('/api/table-data/info-publcity', saveInfoPublictiList);
+router.post('/api/table-data/info-publcity-list', saveInfoPublictiListList);
 
 router.post('/api/table-data/customer', saveCustomer);
 
