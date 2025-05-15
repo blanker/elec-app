@@ -12,7 +12,7 @@ import { saveDeclaration, statDeclarationRundates, getDeclarationsByRundate } fr
 import { saveAccounts, getAccounts } from './account.js';
 import { saveCustomer } from './customer.js';
 import { saveSettlements, countByMonth, fetchByMonth } from './settlement.js';
-import { newUser, login, authMiddleware } from './user.js';
+import { newUser, login, authMiddleware, switchTenant } from './user.js';
 import { getTenant } from './tenant.js';
 import {saveInfoPublictiList, saveInfoPublictiListList} from './info-publicity.js'
 
@@ -95,6 +95,7 @@ router.post('/api/private/settlements-by-month', fetchByMonth);
 
 router.post('/api/private/table-data/new-user', newUser);
 router.post('/api/private/login', login);
+router.post('/api/private/switchTenant', switchTenant);
 
 router.post('/api/private/tenants', getTenant);
 

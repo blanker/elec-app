@@ -57,7 +57,15 @@ curl -X POST \
       -H "Authorization:Bearer eyJ1c2VySWQiOjEsImV4cCI6MTc0NTUwNTIwNDc5NiwiaWF0IjoxNzQ1NDE4ODA0Nzk2fQ==.0cd5611b025ea4454aba8990cbcde6d88dbb912156aca221e3477858f67f1f3b" \
       -d '{"data" : {"phone": "18468103960", "name": "邓毛毛", "password": "103960"}}' \
       -v http://elec.blanker.cc/api/private/table-data/new-user
+
+ curl -X POST \
+      -H "Content-Type: application/json" \
+      -H "Authorization:Bearer eyJ1c2VySWQiOjEsImV4cCI6MTc0NzMxMjA5NzEyMCwiaWF0IjoxNzQ3MjI1Njk3MTIwfQ==.d19aa357129b07dfe0ab218d5476ba77b8ca7e8e99ceb95c0b235253e4f03245" \
+      -d '{"data" : {"phone": "13629482076", "name": "耀晟", "password": "654321"}}' \
+      -v http://elec.blanker.cc/api/private/table-data/new-user
+            
       
+
  curl -X POST \
       -H "Content-Type: application/json" \
       -H "Authorization:Bearer eyJ1c2VySWQiOjIsImV4cCI6MTc0NTU4ODM4Njg0NCwiaWF0IjoxNzQ1NTAxOTg2ODQ0fQ==.05540a2398248e77a61b14739fd98370739a9f86ba77b5e7e415aeeefd2956d2" \

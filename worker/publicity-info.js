@@ -71,7 +71,7 @@ export async function getPublicityInfoList(request, env, context) {
     try {
         const sql = `
     SELECT * 
-      FROM publicity_info
+      FROM info_publicity
      WHERE tenant_id = ?
      GROUP BY run_date, invited_id
     `
@@ -125,7 +125,7 @@ SELECT pi.run_date
       ,count(*) as total
       ,count(distinct brc.account_id) as account_cnt
  FROM bu_response_cap brc
-    , publicity_info pi 
+    , info_publicity  pi 
 WHERE brc.demand_no = pi.invited_id 
   AND brc.tenant_id = pi.tenant_id
   AND brc.tenant_id =?
@@ -194,7 +194,7 @@ export const getResponsesByRundate = async (request, env, context) => {
     try {
         const sql = `
 SELECT brc.*
-  FROM bu_response_cap brc, publicity_info pi
+  FROM bu_response_cap brc, info_publicity  pi
 WHERE brc.demand_no = pi.invited_id
   AND brc.tenant_id = pi.tenant_id
   AND brc.tenant_id =?

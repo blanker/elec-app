@@ -64,7 +64,26 @@ const useUserStore = create(immer(persist((set) => ({
             });
         }
     },
-
+    switchTenant: async (tenant) => {
+        try {
+            set(state => { state.loading = true; state.error = null; });
+            const response = await apiClient.post('/switchTenant', { tenant });
+            console.log('switchTenant response: ', response);
+            if (response.data.success) {
+                set(state => {
+                    state.user = response.data.data;
+                    state.loading = false;
+                })
+                return true;
+            }
+        } catch (error) {
+            console.error('切换租户失败:', error);
+            set(state => {
+                state.error = error.message;
+                state.loading = false;
+            });
+        }
+    }, // switchTenant
     // 原有的 fetch 方法保留
     fetch: async (pond) => {
         const response = await fetch(pond);

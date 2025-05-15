@@ -62,7 +62,7 @@ export const login = async (request, env, context) => {
         // 生成token
         const token = await generateToken(user.id, env);
         console.log('token: ', token);
-        const { id, name, tenant_id, tenant } = user;
+        const { id, name, tenant_id, tenant, tenants } = user;
         // 返回用户信息和token
         return json({
             success: true, data: {
@@ -72,6 +72,7 @@ export const login = async (request, env, context) => {
                 token,
                 tenant_id,
                 tenant,
+                tenants,
             }
         });
 
@@ -98,7 +99,9 @@ export const getUser = async (phone, env) => {
         }
         const user = result.results[0];
         const tenant = await getTenant(user.tenant_id, env);
+        const tenants = await getUserTenants(user.phone, env);
         user.tenant = tenant;
+        user.tenants = tenants;
         return user;
     } catch (error) {
         console.error("Error inserting data:", error);
@@ -106,6 +109,66 @@ export const getUser = async (phone, env) => {
     }
 
 };
+
+export const getUserTenants = async (phone, env) => {
+
+    try {
+
+        const sql = `
+    SELECT u.*,t.name AS tenant_name 
+      FROM user_tenant u, 
+           tenant t
+     WHERE u.tenant_id = t.id
+       AND u.phone = ?
+    `
+        console.log('sql: ', sql);
+        const result = await env.DB.prepare(sql)
+            .bind(phone)
+            .run();
+
+        if (result.results.length == 0) {
+            return null;
+        }
+        const tenants = result.results;
+        return tenants;
+    } catch (error) {
+        console.error("Error inserting data:", error);
+        return null;
+    }
+
+};
+
+export const switchTenant = async (request, env) => {
+    const { tenant: tenantId } = await request.json();
+    try {
+
+        const sql = `
+    UPDATE user SET tenant_id = ? WHERE id = ? 
+    `
+        console.log('sql: ', sql);
+        await env.DB.prepare(sql)
+            .bind(tenantId, request.user.id)
+            .run();
+
+        const user = await getUserById(request.user.id, env);
+        const { id, name, tenant_id, tenant, tenants, phone } = user;
+        // 返回用户信息和token
+        return json({
+            success: true, 
+            data: {
+                id,
+                name,
+                phone,
+                tenant_id,
+                tenant,
+                tenants,
+            }
+        });
+    } catch (error) {
+        console.error("Error inserting data:", error);
+        return null;
+    }
+}
 
 export const getUserById = async (id, env) => {
 
@@ -124,7 +187,9 @@ export const getUserById = async (id, env) => {
         }
         const user = result.results[0];
         const tenant = await getTenant(user.tenant_id, env);
+        const tenants = await getUserTenants(user.phone, env);
         user.tenant = tenant;
+        user.tenants = tenants;
         return user;
     } catch (error) {
         console.error("Error inserting data:", error);
