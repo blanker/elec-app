@@ -1,0 +1,1 @@
+alter table account add column credit_code text;

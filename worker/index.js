@@ -9,7 +9,7 @@ import {
 } from './publicity-info.js';
 import { saveDevices } from './device.js';
 import { saveDeclaration, statDeclarationRundates, getDeclarationsByRundate } from './declaration.js';
-import { saveAccounts, getAccounts } from './account.js';
+import { saveAccounts, saveAccountAgent, getAccounts } from './account.js';
 import { saveCustomer } from './customer.js';
 import { saveSettlements, countByMonth, fetchByMonth } from './settlement.js';
 import { newUser, login, authMiddleware, switchTenant } from './user.js';
@@ -71,6 +71,7 @@ router.post('/api/foo', (request, env, context) => new Response(JSON.stringify({
 router.post('/api/table-device/', saveDevices);
 
 router.post('/api/table-data/account', saveAccounts);
+router.post('/api/table-data/account-agent', saveAccountAgent);
 router.post('/api/private/accounts', getAccounts);
 
 router.post('/api/table-data/daily-demand-market/', saveDeclaration);
