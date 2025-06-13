@@ -73,6 +73,21 @@ ORDER BY brc.account_id ASC;
      WHERE tenant_id = '91440101MA5D693M4Q'
        AND run_month = '2025-02'
      ORDER BY account_id
+;
+
+EXPLAIN QUERY PLAN 
+SELECT brc.*
+  FROM bu_response_cap brc, info_publicity  pi
+WHERE brc.demand_no = pi.invited_id
+  AND brc.tenant_id = pi.tenant_id
+  AND brc.tenant_id = '91440101MA5D693M4Q'
+  AND pi.run_date = '2025-06-17'
+ORDER BY brc.account_id ASC;
+
+SELECT name, type, sql FROM sqlite_schema WHERE type IN ('index');
+
+CREATE INDEX idx_bu_tda ON bu_response_cap(tenant_id, demand_no, account_id)
+
 
 alter table account add column tenant_name text;
 alter table bu_response_cap add column tenant_name text;
