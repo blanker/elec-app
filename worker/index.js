@@ -11,7 +11,7 @@ import { saveDevices } from './device.js';
 import { saveDeclaration, statDeclarationRundates, getDeclarationsByRundate } from './declaration.js';
 import { saveAccounts, saveAccountAgent, getAccounts } from './account.js';
 import { saveCustomer } from './customer.js';
-import { saveSettlements, saveSettlementDetail, countByMonth, fetchByMonth } from './settlement.js';
+import { saveSettlements, saveSettlementDetail, countByMonth, fetchByMonth, fetchDetailByMonth } from './settlement.js';
 import { newUser, login, authMiddleware, switchTenant } from './user.js';
 import { getTenant } from './tenant.js';
 import {saveInfoPublictiList, saveInfoPublictiListList} from './info-publicity.js'
@@ -94,6 +94,7 @@ router.post('/api/table-data/settlement', saveSettlements);
 router.post('/api/table-data/settlement-detail', saveSettlementDetail);
 router.post('/api/private/settlement-count-by-month', countByMonth);
 router.post('/api/private/settlements-by-month', fetchByMonth);
+router.post('/api/private/settlement-detail-by-month', fetchDetailByMonth);
 
 router.post('/api/private/table-data/new-user', newUser);
 router.post('/api/private/login', login);

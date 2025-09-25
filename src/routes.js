@@ -7,6 +7,7 @@ import DeclarationPage from '@/app/declaration/page'
 import ResponsePage from '@/app/response/page'
 import AccountPage from '@/app/account/page'
 import SettlementPage from '@/app/settlement/page'
+import SettlementDetailPage from '@/app/settlement-detail/page'
 
 import TenantPage from '@/app/tenant/page'
 
@@ -30,6 +31,7 @@ const routes = createHashRouter([
             { path: "response", Component: ResponsePage },
             { path: "accounts", Component: AccountPage },
             { path: "settlement", Component: SettlementPage },
+            { path: "settlement-detail", Component: SettlementDetailPage },
             { path: "tenant", Component: TenantPage },
             // { path: "contact", Component: Contact },
         ],

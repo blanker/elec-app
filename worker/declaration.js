@@ -7,6 +7,9 @@ export const saveDeclaration = async (request, env, context) => {
         if (!extra.run_date) {
             return json({ success: true, name: 'NO RUN_DATE' });
         }
+        if (!data.loads_use) {
+            return json({ success: true, name: 'NO loads use' });
+        }
         const sql = `
 INSERT INTO daily_demand_market (
 account_id,

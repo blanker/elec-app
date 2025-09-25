@@ -22,19 +22,19 @@ setLang('zh_CN')
 
 export default function Page() {
     const {
-        settlements,
+        settlementDetail,
         countByMonth,
         loading,
         error,
-        fetchSettlements,
+        fetchSettlementDetail,
         fetchCountByMonth,
     } = useSettlementStore(
         useShallow((state) => ({
-            settlements: state.settlements,
+            settlementDetail: state.settlementDetail,
             countByMonth: state.countByMonth,
             loading: state.loading,
             error: state.error,
-            fetchSettlements: state.fetchSettlements,
+            fetchSettlementDetail: state.fetchSettlementDetail,
             fetchCountByMonth: state.fetchCountByMonth,
         }))
     );
@@ -87,16 +87,16 @@ export default function Page() {
         // 处理查询逻辑
         console.log("查询日期:", date);
         if (!date) return;
-        fetchSettlements(date);
+        fetchSettlementDetail(date);
     }
 
     const dataConfig = React.useMemo(() => {
-        console.log('dataConfig:', settlements);
+        console.log('dataConfig:', settlementDetail);
         return {
             ...defaultDataCfg,
-            data: settlements,
+            data: settlementDetail,
         };
-    }, [settlements]);
+    }, [settlementDetail]);
 
     return (
         <div className='p-4'>
@@ -113,7 +113,7 @@ export default function Page() {
 
                 <Export
                     sheetInstance={sheetInstance}
-                    fileName={`结算信息_` + (date ? format(date, "yyyy-MM") : '')}
+                    fileName={'结算明细信息_' + (date ? format(date, "yyyy-MM") : '')}
                 >
                     <Button>复制/导出</Button>
                 </Export>
@@ -157,16 +157,13 @@ const defaultDataCfg = {
         "columns": [
             "run_month",
             "account_id",
+            "run_date",
             "account_name",
-            "share_price",
-            "month_load",
             "res_fee_sum",
             "ass_fee_sum",
-            "share_fee",
-            "gain_sharing",
-            "la_sharing",
+            "total_revenue",
             "bu_sharing",
-            "fee_sum",
+            "la_sharing",
         ],
     },
     "meta": [
@@ -183,12 +180,8 @@ const defaultDataCfg = {
             "name": "月份"
         },
         {
-            "field": "share_price",
-            "name": "分摊价格(元/ 千瓦 · 次)"
-        },
-        {
-            "field": "month_load",
-            "name": "月度用电量(千瓦时)"
+            "field": "run_date",
+            "name": "日期"
         },
         {
             "field": "res_fee_sum",
@@ -196,28 +189,25 @@ const defaultDataCfg = {
         },
         {
             "field": "ass_fee_sum",
-            "name": "响应考核费用(元)"
+            "name": "总响应考核费用(元)"
         },
         {
-            "field": "share_fee",
-            "name": "分摊费用(元)"
+            "field": "total_revenue",
+            "name": "总响应收益(元)"
         },
         {
             "field": "gain_sharing",
             "name": "收益分成比例"
         },
         {
-            "field": "la_sharing",
-            "name": "负荷聚合商分成收益(元)"
-        },
-        {
             "field": "bu_sharing",
             "name": "用户分成收益(元)"
         },
         {
-            "field": "fee_sum",
-            "name": "净收益(元)"
+            "field": "la_sharing",
+            "name": "负荷聚合商分成收益(元)"
         },
+        
     ],
     data: [],
 };
@@ -259,6 +249,24 @@ const s2Options = {
     // 减少不必要的渲染
     frozenRowHeader: true,
     frozenColHeader: true,
+    // 配置小计总计显示
+    totals: {
+        col: {
+          showGrandTotals: true,
+          showSubTotals: true,
+          reverseGrandTotalsLayout: true,
+          reverseSubTotalsLayout: true,
+          subTotalsDimensions: ['account_id'],
+          calcGrandTotals: {
+            aggregation: 'SUM',
+          },
+          calcSubTotals: {
+            aggregation: 'SUM',
+          },
+          // grandTotalsLabel: '总计',
+          // subTotalsLabel: '小计',
+        },
+    }
 };
 
 const onUpdate = (renderOptions) => {

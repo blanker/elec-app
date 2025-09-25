@@ -228,6 +228,32 @@ export async function fetchByMonth(request, env, context) {
     }
 
 }
+export async function fetchDetailByMonth(request, env, context) {
+    console.log('fetchDetailByMonth', request.user);
+    const { data } = await request.json();
+    try {
+        const sql = `
+    SELECT *
+      FROM settlement_detail 
+     WHERE tenant_id = ?
+       AND run_month = ?
+     ORDER BY account_id, run_date
+    `
+        console.log('sql: ', sql);
+        const result = await env.DB.prepare(sql)
+            .bind(request?.user?.tenant?.id, data.date)
+            .run();
+
+        return json({
+            success: true,
+            data: result.results,
+        });
+    } catch (error) {
+        console.error("Error query data:", error);
+        return json({ success: false, error: error.message });
+    }
+
+}
 
 function formatTimestampToCST(timestamp) {
     // 东八区时间 = UTC 时间 + 8 小时

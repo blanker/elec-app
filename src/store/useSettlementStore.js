@@ -11,6 +11,8 @@ const useSettlementStore = create(immer((set) => ({
     error: null,
     bears: 0,
 
+    settlementDetail: [],
+
     increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
     removeAllBears: () => set({ bears: 0 }),
 
@@ -23,6 +25,24 @@ const useSettlementStore = create(immer((set) => ({
             const response = await apiClient.post('/settlements-by-month', { data: { date } });
             set(state => {
                 state.settlements = response.data.data || response.data;
+                state.loading = false;
+            });
+        } catch (error) {
+            console.error('获取结算数据列表失败:', error);
+            set(state => {
+                state.error = error.message;
+                state.loading = false;
+            });
+        }
+    },
+    fetchSettlementDetail: async (date) => {
+        try {
+            set(state => { state.loading = true; state.error = null; });
+            console.log(`从 ${config.apiHost} 获取数据`);
+
+            const response = await apiClient.post('/settlement-detail-by-month', { data: { date } });
+            set(state => {
+                state.settlementDetail = response.data.data || response.data;
                 state.loading = false;
             });
         } catch (error) {

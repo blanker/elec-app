@@ -106,6 +106,13 @@ const menus = [
     },
     {
         section: 'main',
+        key: 'settlement-detail',
+        title: "月结算明细",
+        url: "/settlement-detail",
+        icon: IconFolder,
+    },
+    {
+        section: 'main',
         key: 'accounts',
         title: "商户列表",
         url: "/accounts",
