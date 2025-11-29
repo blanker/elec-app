@@ -112,7 +112,7 @@ function Calendar({
     props.todayClassName
   )
   const _outsideClassName = cn(
-    "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
+    "day-outside text-foreground opacity-100 font-semibold aria-selected:bg-accent/50 aria-selected:text-foreground aria-selected:opacity-100",
     props.outsideClassName
   )
   const _disabledClassName = cn(
