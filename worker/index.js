@@ -57,8 +57,52 @@ const withAuthenticatedUser = async (request, env) => {
   request.user = user.user;
 }
 
+// New middleware for forwarding /api/table-data requests to https://xuanweijiuxie.cn
+// Placed after the withAuthenticatedUser definition
+const forwardMiddleware = async (request, env, ctx, next) => {
+  try {
+    console.log('[Forward Middleware] Triggered for:', request.url);
+    const remoteBase = 'https://admin.xuanweijiuxie.cn';
+    const remoteUrl = remoteBase + new URL(request.url).pathname.replace('/api/table-data', '/api/v2/private/crawl/proxy/table-data');
+
+    // Clone the request to safely forward the body
+    const clonedRequest = request.clone();
+
+    const forwardedRequest = new Request(remoteUrl, {
+      method: clonedRequest.method,
+      headers: clonedRequest.headers,
+      body: clonedRequest.body,
+      redirect: 'manual',
+    });
+
+    // Asynchronous forward, ignore errors and do not await
+    const forwarding = fetch(forwardedRequest)
+      .then(res => {
+        if (!res.ok) {
+          console.error(`[Forward Fail] ${remoteUrl} status: ${res.status}`);
+        } else {
+          console.log(`[Forward Success] ${remoteUrl} status: ${res.status}`);
+        }
+      })
+      .catch(err => {
+        console.error(`[Forward Error] ${remoteUrl} failed:`, err);
+      });
+
+    if (ctx && typeof ctx.waitUntil === 'function') {
+      ctx.waitUntil(forwarding);
+    }
+  } catch (err) {
+    console.error('[Forward Middleware] Execution failed:', err);
+  }
+
+  // Continue to next handler
+  return ;
+};
 router
   .all('/api/private/*', withAuthenticatedUser)
+  // Add the middleware before the specific /api/table-data POST routes
+  // Assuming insertion after router.all('/api/private/*', withAuthenticatedUser)
+  .all('/api/table-data/*', forwardMiddleware)
   .get('/api/hello/:name', ({ name }) => `Hello, ${name}!`)
   .get('/api/json', () => json({ name: 'json' }))
   .get('/api', () => json({ name: 'gogo' }))
