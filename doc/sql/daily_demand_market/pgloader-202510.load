@@ -1,0 +1,17 @@
+LOAD DATABASE
+    FROM sqlite:////opt/sqlite/daily_demand_market_202510.sqlite
+    INTO postgresql://postgres:mysecretpassword-Of-pg123@postgres:5432/xwjx
+
+    WITH data only
+
+    CAST column daily_demand_market_202510.voltagekV to varchar using float-to-string,
+         column daily_demand_market_202510.maxRespLoad to varchar using float-to-string,
+         column daily_demand_market_202510.minRespLoad to varchar using float-to-string,
+         column daily_demand_market_202510.maxValleyLoad to varchar using float-to-string,
+         column daily_demand_market_202510.minValleyLoad to varchar using float-to-string
+
+    SET PostgreSQL PARAMETERS
+         search_path TO 'elec_app'
+
+    BEFORE LOAD DO
+        $$ TRUNCATE TABLE elec_app.daily_demand_market_202510 RESTART IDENTITY CASCADE $$;

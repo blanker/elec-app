@@ -70,10 +70,13 @@ export async function getPublicityInfoList(request, env, context) {
     console.log('getPublicityInfoList', request.user);
     try {
         const sql = `
-    SELECT * 
-      FROM info_publicity
-     WHERE tenant_id = ?
-     GROUP BY run_date, invited_id
+    SELECT pi.* 
+      FROM info_publicity pi,
+           bu_response_cap brc
+       WHERE brc.demand_no = pi.invited_id
+         AND brc.tenant_id = pi.tenant_id
+         AND pi.tenant_id = ?
+     ORDER BY pi.run_date, pi.invited_id
     `
         console.log('sql: ', sql);
         const result = await env.DB.prepare(sql)

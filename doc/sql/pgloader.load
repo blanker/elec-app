@@ -1,0 +1,151 @@
+LOAD DATABASE
+    FROM sqlite:////opt/sqlite/account.sqlite
+    INTO postgresql://postgres:mysecretpassword-Of-pg123@postgres:5432/xwjx
+
+    WITH data only
+
+    CAST
+        column account.update_time to timestamptz using sqlite-timestamp-to-timestamp
+
+    SET PostgreSQL PARAMETERS
+         search_path TO 'elec_app'
+
+    BEFORE LOAD DO
+        $$ TRUNCATE TABLE elec_app.account RESTART IDENTITY CASCADE $$;
+
+LOAD DATABASE
+    FROM sqlite:////opt/sqlite/bu_response_cap.sqlite
+    INTO postgresql://postgres:mysecretpassword-Of-pg123@postgres:5432/xwjx
+
+    WITH data only
+
+    CAST
+        column account.update_time to timestamptz using sqlite-timestamp-to-timestamp
+
+    SET PostgreSQL PARAMETERS
+         search_path TO 'elec_app'
+
+    BEFORE LOAD DO
+        $$ TRUNCATE TABLE elec_app.bu_response_cap RESTART IDENTITY CASCADE $$;
+
+LOAD DATABASE
+    FROM sqlite:////opt/sqlite/customer.sqlite
+    INTO postgresql://postgres:mysecretpassword-Of-pg123@postgres:5432/xwjx
+
+    WITH data only
+
+    SET PostgreSQL PARAMETERS
+         search_path TO 'elec_app'
+
+    BEFORE LOAD DO
+        $$ TRUNCATE TABLE elec_app.customer RESTART IDENTITY CASCADE $$;
+
+LOAD DATABASE
+    FROM sqlite:////opt/sqlite/info_publicity.sqlite
+    INTO postgresql://postgres:mysecretpassword-Of-pg123@postgres:5432/xwjx
+
+    WITH data only
+
+    SET PostgreSQL PARAMETERS
+         search_path TO 'elec_app'
+
+    BEFORE LOAD DO
+        $$ TRUNCATE TABLE elec_app.info_publicity RESTART IDENTITY CASCADE $$;
+
+LOAD DATABASE
+    FROM sqlite:////opt/sqlite/publicity_info.sqlite
+    INTO postgresql://postgres:mysecretpassword-Of-pg123@postgres:5432/xwjx
+
+    WITH data only
+
+    SET PostgreSQL PARAMETERS
+         search_path TO 'elec_app'
+
+    BEFORE LOAD DO
+        $$ TRUNCATE TABLE elec_app.publicity_info RESTART IDENTITY CASCADE $$;
+
+LOAD DATABASE
+    FROM sqlite:////opt/sqlite/settlement.sqlite
+    INTO postgresql://postgres:mysecretpassword-Of-pg123@postgres:5432/xwjx
+
+    WITH data only
+
+    SET PostgreSQL PARAMETERS
+         search_path TO 'elec_app'
+
+    BEFORE LOAD DO
+        $$ TRUNCATE TABLE elec_app.settlement RESTART IDENTITY CASCADE $$;
+
+LOAD DATABASE
+    FROM sqlite:////opt/sqlite/settlement_detail.sqlite
+    INTO postgresql://postgres:mysecretpassword-Of-pg123@postgres:5432/xwjx
+
+    WITH data only
+
+    SET PostgreSQL PARAMETERS
+         search_path TO 'elec_app'
+
+    BEFORE LOAD DO
+        $$ TRUNCATE TABLE elec_app.settlement_detail RESTART IDENTITY CASCADE $$;
+
+LOAD DATABASE
+    FROM sqlite:////opt/sqlite/tenant.sqlite
+    INTO postgresql://postgres:mysecretpassword-Of-pg123@postgres:5432/xwjx
+
+    WITH data only
+
+    SET PostgreSQL PARAMETERS
+         search_path TO 'elec_app'
+
+    BEFORE LOAD DO
+        $$ TRUNCATE TABLE elec_app.tenant RESTART IDENTITY CASCADE $$;
+
+LOAD DATABASE
+    FROM sqlite:////opt/sqlite/user.sqlite
+    INTO postgresql://postgres:mysecretpassword-Of-pg123@postgres:5432/xwjx
+
+    WITH data only
+
+    SET PostgreSQL PARAMETERS
+         search_path TO 'elec_app'
+
+    BEFORE LOAD DO
+        $$ TRUNCATE TABLE elec_app.user RESTART IDENTITY CASCADE $$;
+
+LOAD DATABASE
+    FROM sqlite:////opt/sqlite/user_tenant.sqlite
+    INTO postgresql://postgres:mysecretpassword-Of-pg123@postgres:5432/xwjx
+
+    WITH data only
+
+    SET PostgreSQL PARAMETERS
+         search_path TO 'elec_app'
+
+    BEFORE LOAD DO
+        $$ TRUNCATE TABLE elec_app.user_tenant RESTART IDENTITY CASCADE $$;
+
+/*
+LOAD DATABASE
+    FROM sqlite:////opt/sqlite/daily_demand_market_new.sqlite
+    INTO postgresql://postgres:mysecretpassword-Of-pg123@postgres:5432/xwjx
+
+    WITH data only
+
+    SET PostgreSQL PARAMETERS
+         search_path TO 'elec_app'
+
+    BEFORE LOAD DO
+        $$ TRUNCATE TABLE elec_app.daily_demand_market_new RESTART IDENTITY CASCADE $$;
+*/
+
+LOAD DATABASE
+    FROM sqlite:////opt/sqlite/info_publicity_list.sqlite
+    INTO postgresql://postgres:mysecretpassword-Of-pg123@postgres:5432/xwjx
+
+    WITH data only
+
+    SET PostgreSQL PARAMETERS
+         search_path TO 'elec_app'
+
+    BEFORE LOAD DO
+        $$ TRUNCATE TABLE elec_app.info_publicity_list RESTART IDENTITY CASCADE $$;

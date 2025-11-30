@@ -1,0 +1,12 @@
+
+LOAD DATABASE
+    FROM sqlite:////opt/sqlite/daily_demand_market_new.sqlite
+    INTO postgresql://postgres:mysecretpassword-Of-pg123@postgres:5432/xwjx
+
+    WITH data only
+
+    SET PostgreSQL PARAMETERS
+         search_path TO 'elec_app'
+
+    BEFORE LOAD DO
+        $$ TRUNCATE TABLE elec_app.daily_demand_market_new RESTART IDENTITY CASCADE $$;

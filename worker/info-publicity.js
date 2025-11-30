@@ -92,7 +92,7 @@ export const saveInfoPublictiListList = async (request, env, context) => {
     tenant_id,
     tenant_name
     )
-         VALUES (?,?,?,?, ?,?,?,?, ?,?,?,?, CURRENT_TIMESTAMP)
+         VALUES (?,?,?,?, ?,?,?,?, ?,?,CURRENT_TIMESTAMP, ?,?)
       ON CONFLICT(tenant_id, run_date, invited_id, list_id) DO UPDATE SET
         start_date=excluded.start_date,
         end_date=excluded.end_date,
